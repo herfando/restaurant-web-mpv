@@ -1,12 +1,10 @@
 import './index.css';
+import Login from '@/pages/01_Login';
 
 function App() {
   return (
     <>
-      <div className='h-500 w-200 text-center font-bold text-green-500'>
-        {' '}
-        Selamat pagi
-      </div>
+      <Login />
     </>
   );
 }
