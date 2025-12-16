@@ -1,15 +1,25 @@
+import Button from '@/components/ui/button';
+import Input from '@/components/ui/input';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
+
 export default function Login() {
+  //#region hidden-show password
+  const [show, setShow] = useState(false);
+  const [password, setPassword] = useState('');
+  //#endregion
+
   return (
     <section className='absolute top-1/2 mx-auto flex h-auto w-full -translate-y-1/2 items-center justify-center'>
-      <div className='item mx-auto flex h-1024 w-full max-w-1472 pr-16 pl-16'>
+      <div className='item mx-auto flex h-auto w-full max-w-1472'>
         {/* 1. left side */}
-        <div className='basis-1/2'>
+        <div className='hidden basis-1/2 md:flex'>
           <img src='/images/01_burger.png' alt='burger' />
         </div>
         {/* 2. right side */}
         <div className='mx-auto flex basis-1/2 flex-col items-center justify-center'>
           {/* Foody */}
-          <div className='bg-accent-green h-480 w-374'>
+          <div className='h-480 w-374 space-y-20 md:space-y-16'>
             <div className='flex space-y-16 space-x-[11.43px] md:space-y-20 md:space-x-15'>
               <img src='/icons/01_brandfoody.svg' alt='brand food' />
               <h3 className='md:-text-[32px] text-[24.38px] font-extrabold'>
@@ -24,7 +34,8 @@ export default function Login() {
             <h4 className='md:text-md text-sm font-medium'>
               Good to see you again! Let’s eat
             </h4>
-            <div className='mx-auto flex h-56 w-374 items-center justify-center gap-8 p-8'>
+            {/* Button sign up & sign in */}
+            <div className='mx-auto flex h-56 w-full items-center justify-center gap-8 bg-[#F5F5F5] p-8'>
               <button className='h-full w-full basis-1/2 rounded-2xl bg-white text-[#0A0D12]'>
                 Sign in
               </button>
@@ -32,6 +43,33 @@ export default function Login() {
                 Sign up
               </button>
             </div>
+            {/* email */}
+            <Input placeholder='Email'></Input>
+            {/* pasword */}
+            <div className='relative'>
+              <Input
+                type={show ? 'string' : 'password'}
+                value={password}
+                placeholder='Password'
+                onChange={(e) => setPassword(e.target.value)}
+              ></Input>
+              <button
+                onClick={() => setShow(!show)}
+                className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2 cursor-pointer'
+              >
+                {show ? <Eye /> : <EyeOff />}
+              </button>
+            </div>
+            {/* Ceklist */}
+            <label className='flex items-center gap-4'>
+              <input type='checkbox' className='peer hidden' />
+              <span className='flex h-20 w-20 cursor-pointer items-center justify-center rounded-sm border border-[#D5D7DA] text-white peer-checked:bg-blue-600'>
+                ✔
+              </span>
+              <span className='md:text-md tsssext-sm'>Remember Me</span>
+            </label>
+            {/* Button */}
+            <Button className='cursor-pointer'>Login</Button>
           </div>
         </div>
       </div>
