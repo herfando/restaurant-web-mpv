@@ -17,9 +17,9 @@ export default function Login() {
           <img src='/images/01_burger.png' alt='burger' />
         </div>
         {/* 2. right side */}
-        <div className='mx-auto flex basis-1/2 flex-col items-center justify-center'>
+        <div className='flex w-full flex-col items-center justify-center md:basis-1/2'>
           {/* Foody */}
-          <div className='h-480 w-374 space-y-20 md:space-y-16'>
+          <div className='h-480 w-345 space-y-20 md:space-y-16'>
             <div className='flex space-y-16 space-x-[11.43px] md:space-y-20 md:space-x-15'>
               <img src='/icons/01_brandfoody.svg' alt='brand food' />
               <h3 className='md:-text-[32px] text-[24.38px] font-extrabold'>
