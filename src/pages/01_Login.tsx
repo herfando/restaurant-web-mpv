@@ -2,6 +2,7 @@ import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   //#region hidden-show password
@@ -19,7 +20,7 @@ export default function Login() {
         {/* 2. right side */}
         <div className='flex w-full flex-col items-center justify-center md:basis-1/2'>
           {/* Foody */}
-          <div className='h-480 w-345 space-y-20 md:space-y-16'>
+          <div className='w-345 space-y-20 md:space-y-16'>
             <div className='flex space-y-16 space-x-[11.43px] md:space-y-20 md:space-x-15'>
               <img src='/icons/01_brandfoody.svg' alt='brand food' />
               <h3 className='md:-text-[32px] text-[24.38px] font-extrabold'>
@@ -36,12 +37,16 @@ export default function Login() {
             </h4>
             {/* Button sign up & sign in */}
             <div className='mx-auto flex h-56 w-full items-center justify-center gap-8 bg-[#F5F5F5] p-8'>
-              <button className='h-full w-full basis-1/2 rounded-2xl bg-white text-[#0A0D12]'>
+              <button className='h-full w-full basis-1/2 rounded-2xl bg-white font-bold text-[#0A0D12]'>
                 Sign in
               </button>
-              <button className='h-full w-full basis-1/2 rounded-2xl bg-white text-neutral-700'>
+
+              <Link
+                to='/register'
+                className='h-full w-full basis-1/2 content-center rounded-2xl text-center text-neutral-700'
+              >
                 Sign up
-              </button>
+              </Link>
             </div>
             {/* email */}
             <Input placeholder='Email'></Input>
@@ -63,7 +68,7 @@ export default function Login() {
             {/* Ceklist */}
             <label className='flex items-center gap-4'>
               <input type='checkbox' className='peer hidden' />
-              <span className='flex h-20 w-20 cursor-pointer items-center justify-center rounded-sm border border-[#D5D7DA] text-white peer-checked:bg-blue-600'>
+              <span className='flex h-20 w-20 cursor-pointer items-center justify-center rounded-sm border border-[#D5D7DA] text-white peer-checked:bg-[#C12116]'>
                 ✔
               </span>
               <span className='md:text-md tsssext-sm'>Remember Me</span>
