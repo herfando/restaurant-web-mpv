@@ -14,26 +14,26 @@ export default function NavbarGuest() {
 
   return (
     <section
-      className={`fixed mx-auto h-80 w-full ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}
+      className={`fixed z-10 mx-auto h-80 w-full ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}
     >
       <div className='custom-container flex h-80 items-center justify-between'>
         {/* left */}
         <div className='flex items-center gap-15 hover:cursor-pointer'>
           <img
-            className='h-42 w-42 text-white'
+            className='h-40 w-40 text-white md:h-42 md:w-42'
             src={
               scrolled ? '/icons/01_brandfoody.svg' : '/icons/02_whitelogo.svg'
             }
             alt='brandfoody'
           />
           <h3
-            className={`text-lg-lh font-extrabold ${scrolled ? 'text-black' : 'text-white'} `}
+            className={`text-lg-lh hidden font-extrabold md:flex ${scrolled ? 'text-black' : 'text-white'} `}
           >
             Foody
           </h3>
         </div>
         {/* right */}
-        <div className='flex gap-16'>
+        <div className='hidden gap-16 md:flex'>
           <button
             className={`text-md h-48 w-163 rounded-full font-bold hover:cursor-pointer ${scrolled ? 'border border-black text-black hover:bg-black hover:text-white' : 'border border-white text-white hover:bg-white hover:text-black'} `}
           >
