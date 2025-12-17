@@ -1,7 +1,8 @@
 export default function Home() {
   return (
-    <div>
+    <section>
+      <img className='w-full' src='/images/02_homeburger.png' alt='hamburger' />
       <div></div>
-    </div>
+    </section>
   );
 }
