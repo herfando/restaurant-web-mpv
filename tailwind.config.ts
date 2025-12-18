@@ -44,6 +44,9 @@ const customTextPlugin = plugin(({ addUtilities }) => {
 export default {
   theme: {
     extend: {
+      fontFamily: {
+        nunito: ['Nunito', 'sans-serif'],
+      },
       animation: {
         marquee: 'marquee var(--duration) linear infinite',
         'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
