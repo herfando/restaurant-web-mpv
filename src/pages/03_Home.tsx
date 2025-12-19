@@ -59,7 +59,7 @@ export default function Home() {
       </div>
 
       {/* 4.Detail recommended section */}
-      <div className='custom-container flex flex-wrap'>
+      <div className='custom-container mb-48 flex flex-wrap md:mb-100'>
         <div>
           <div className='flex items-center gap-12'>
             <img
