@@ -4,6 +4,7 @@ import './index.css';
 // import AppRoutes from '@/routes/Routes';
 import NavbarGuest from './components/layout/01_NavbarGuest';
 import Home from '@/pages/03_Home';
+import Footer from './components/layout/03_Footer';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       {/* <Register /> */}
       <NavbarGuest />
       <Home />
+      <Footer />
     </>
   );
 }
