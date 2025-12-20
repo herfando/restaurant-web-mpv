@@ -34,7 +34,8 @@ export default function Home() {
       </div>
 
       {/* 2.Category section */}
-      <div className='custom-container my-24 flex flex-wrap justify-between space-y-20 space-x-20 md:my-48 md:space-x-[46.8px]'>
+      <div className='custom-container my-24 grid grid-cols-3 justify-between space-y-20 space-x-20 md:my-48 md:grid-cols-6 md:space-x-[46.8px]'>
+        {/* Restaurant */}
         <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
           <img
             className='h-48 w-48 md:h-65 md:w-65'
@@ -42,6 +43,51 @@ export default function Home() {
             alt='restaurant'
           />
           <p className='text-sm font-bold md:text-lg'>All Restaurant</p>
+        </div>
+        {/* Nearby */}
+        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+          <img
+            className='h-48 w-48 md:h-65 md:w-65'
+            src='/images/05_nearby.png'
+            alt='nearby'
+          />
+          <p className='text-sm font-bold md:text-lg'>Nearby</p>
+        </div>
+        {/* Discount */}
+        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+          <img
+            className='h-48 w-48 md:h-65 md:w-65'
+            src='/images/06_discount.png'
+            alt='discount'
+          />
+          <p className='text-sm font-bold md:text-lg'>Discount</p>
+        </div>
+        {/* Bestseller */}
+        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+          <img
+            className='h-48 w-48 md:h-65 md:w-65'
+            src='/images/07_bestseller.png'
+            alt='bestseller'
+          />
+          <p className='text-sm font-bold md:text-lg'>Best Seller</p>
+        </div>
+        {/* Delivery */}
+        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+          <img
+            className='h-48 w-48 md:h-65 md:w-65'
+            src='/images/08_delivery.png'
+            alt='delivery'
+          />
+          <p className='text-sm font-bold md:text-lg'>Delivery</p>
+        </div>
+        {/* Lunch */}
+        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+          <img
+            className='h-48 w-48 md:h-65 md:w-65'
+            src='/images/09_lunch.png'
+            alt='lunch'
+          />
+          <p className='text-sm font-bold md:text-lg'>Lunch</p>
         </div>
       </div>
 
