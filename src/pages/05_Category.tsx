@@ -2,7 +2,7 @@ import { Check, Star } from 'lucide-react';
 
 export default function Category() {
   return (
-    <section className='custom-container md:mt-48'>
+    <section className='custom-container mb-40 md:mt-48 md:mb-100'>
       {/* title */}
       <h2 className='md:text-lg-lh font-extrabold md:mb-32'>All Restaurant</h2>
       {/* 1. Left */}

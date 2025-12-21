@@ -6,7 +6,8 @@ import './index.css';
 import NavbarGuest2 from './components/layout/01_NavbarGuest2';
 // import Home from '@/pages/03_Home';
 // import Detail from './pages/04_Detail';
-import Category from './pages/05_Category';
+// import Category from './pages/05_Category';
+import MyCart from './pages/06_MyCart';
 import Footer from './components/layout/03_Footer';
 
 function App() {
@@ -19,7 +20,8 @@ function App() {
       <NavbarGuest2 />
       {/* <Home /> */}
       {/* <Detail /> */}
-      <Category />
+      {/* <Category /> */}
+      <MyCart />
       <Footer />
     </>
   );
