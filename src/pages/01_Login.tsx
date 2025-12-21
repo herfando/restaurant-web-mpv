@@ -1,6 +1,6 @@
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
-import { Eye, EyeOff } from 'lucide-react';
+import { Check, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -69,7 +69,7 @@ export default function Login() {
             <label className='flex items-center gap-4'>
               <input type='checkbox' className='peer hidden' />
               <span className='flex h-20 w-20 cursor-pointer items-center justify-center rounded-sm border border-[#D5D7DA] text-white peer-checked:bg-[#C12116]'>
-                ✔
+                <Check />
               </span>
               <span className='md:text-md tsssext-sm'>Remember Me</span>
             </label>

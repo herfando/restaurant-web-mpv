@@ -52,14 +52,14 @@ export default function Detail() {
           </div>
         </div>
         {/* rigth */}
-        <div className='flex h-44 w-140 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] hover:cursor-pointer'>
+        <div className='flex h-44 w-44 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] hover:cursor-pointer md:w-140'>
           <img src='/icons/07_iconshare.png' alt='share icon' />
-          <span>Share</span>
+          <span className='hidden md:block'>Share</span>
         </div>
       </div>
       {/* line */}
       <div className='mb-16 w-full border border-[#D5D7DA] md:mb-36'></div>
-      {/* Menu */}
+      {/* 3. Menu */}
       <div>
         <div className='md:text-lg-lh text-xs-lh mb-16 font-extrabold md:mb-24'>
           Menu
@@ -81,7 +81,7 @@ export default function Detail() {
       </div>
       {/* picture menu */}
       <div className='flex gap-x-16 gap-y-16 md:gap-x-20 md:gap-y-24'>
-        <div className='w-285'>
+        <div className='w-285 space-y-16 space-x-16 md:space-y-24 md:space-x-20'>
           <img src='/images/14_image5.png' alt='burger5' />
           {/* detail price and add */}
           <div className='flex flex-col justify-between space-y-16 p-16 md:flex-row'>
@@ -92,6 +92,42 @@ export default function Detail() {
             <div className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white md:h-40 md:w-79'>
               Add
             </div>
+          </div>
+        </div>
+      </div>
+      {/* 4. Review */}
+      <div>
+        <h3 className='text-xs-lh font-extrabold md:text-[36px]'>Review</h3>
+        {/* star */}
+        <p className='mb-16 flex gap-x-4 md:mb-24'>
+          <span>
+            <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+          </span>
+          <span>4.9 (24 Ulasan)</span>
+        </p>
+        {/* comment review */}
+        <div>
+          <div className='h-222 w-361 md:h-204 md:w-590'>
+            <div className='mb-16 flex items-center gap-x-12'>
+              <div className='h-58 w-58 rounded-full md:h-64 md:w-64'>
+                <img src='/images/15_image6.png' alt='img profile' />
+              </div>
+              <div>
+                <p>Michael Brown</p>
+                <p>25 August 2025, 13:38</p>
+              </div>
+            </div>
+            <div className='mb-8 flex gap-x-2'>
+              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+            </div>
+            <p>
+              What a fantastic place! The food was delicious, and the ambiance
+              was delightful. A must-visit for anyone looking for a great time!
+            </p>
           </div>
         </div>
       </div>
