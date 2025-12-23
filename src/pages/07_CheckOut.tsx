@@ -23,7 +23,7 @@ export default function CheckOut() {
     {
       id: 'Mandiri',
       name: 'Mandiri',
-      img: '/images/18_BNI.png',
+      img: '/images/21_MANDIRI.png',
     },
   ];
 
@@ -101,9 +101,9 @@ export default function CheckOut() {
               <div key={payment.id}>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-x-5'>
-                    <div className='flex h-40 w-40 items-center justify-center'>
+                    <div className='flex h-40 w-40 items-center justify-center rounded-sm border border-neutral-300'>
                       <img
-                        className='h-[8.66px] w-[29.63px]'
+                        className='w-[29.63px]'
                         src={payment.img}
                         alt={payment.name}
                       />
