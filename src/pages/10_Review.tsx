@@ -12,7 +12,7 @@ export default function Review() {
             </h3>
             <X />
           </div>
-          <div className='flex flex-col items-center'>
+          <div className='flex w-full flex-col items-center'>
             {/* Give rating */}
             <div className='mt-16 flex flex-col items-center md:mt-24'>
               <p className='text-md font-extrabold'>Give Rating</p>
@@ -25,16 +25,18 @@ export default function Review() {
               </div>
             </div>
             {/* form */}
-            <label className='mt-16 block h-235 w-329 border border-neutral-300 p-12 md:mt-24'>
+            <label className='mt-16 block h-235 w-329 rounded-xl border border-neutral-300 p-12 md:mt-24 md:w-391'>
               <textarea
                 className='md:text-md h-full w-full text-sm'
                 placeholder='Please share your thoughts about our service!'
               />
             </label>
             {/* button send */}
-            <button className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] md:mt-24 md:h-48'>
-              Send
-            </button>
+            <div className='mb-16 w-full md:mb-24'>
+              <button className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] md:mt-24 md:h-48 md:w-391'>
+                Send
+              </button>
+            </div>
           </div>
         </div>
       </section>
