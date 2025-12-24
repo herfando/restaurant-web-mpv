@@ -33,7 +33,7 @@ export default function Review() {
             </label>
             {/* button send */}
             <div className='mb-16 w-full md:mb-24'>
-              <button className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] md:mt-24 md:h-48 md:w-391'>
+              <button className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] hover:cursor-pointer md:mt-24 md:h-48 md:w-391'>
                 Send
               </button>
             </div>
