@@ -95,6 +95,19 @@ export default function MyOrders() {
                   </p>
                 </div>
               </div>
+              {/* line */}
+              <div className='my-12 w-full border border-[#D5D7DA] md:my-16'></div>
+
+              {/* Total */}
+              <div className='flex flex-wrap justify-between gap-y-12'>
+                <div className='text-sm'>
+                  <p>Total</p>
+                  <p className='text-md font-extrabold md:text-xl'>Rp100.000</p>
+                </div>
+                <button className='h-44 w-full rounded-full bg-[#C12116] text-white hover:cursor-pointer md:h-48 md:w-240'>
+                  Give Review
+                </button>
+              </div>
             </div>
           </div>
         </div>
