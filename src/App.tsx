@@ -3,7 +3,7 @@ import './index.css';
 // import Register from './pages/02_Register';
 // import AppRoutes from '@/routes/Routes';
 // import NavbarGuest from './components/layout/01_NavbarGuest';
-// import NavbarGuest2 from './components/layout/01_NavbarGuest2';
+import NavbarGuest2 from './components/layout/01_NavbarGuest2';
 // import Home from '@/pages/03_Home';
 // import Detail from './pages/04_Detail';
 // import Category from './pages/05_Category';
@@ -11,8 +11,9 @@ import './index.css';
 // import CheckOut from './pages/07_CheckOut';
 // import Success from './pages/08_Success';
 // import MyOrders from './pages/09_MyOrders';
-import Review from './pages/10_Review';
-// import Footer from './components/layout/03_Footer';
+// import Review from './pages/10_Review';
+import Profile from './pages/11_Profile';
+import Footer from './components/layout/03_Footer';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
       {/* <Login /> */}
       {/* <Register /> */}
       {/* <NavbarGuest /> */}
-      {/* <NavbarGuest2 /> */}
+      <NavbarGuest2 />
       {/* <Home /> */}
       {/* <Detail /> */}
       {/* <Category /> */}
@@ -29,8 +30,9 @@ function App() {
       {/* <CheckOut /> */}
       {/* <Success /> */}
       {/* <MyOrders /> */}
-      <Review />
-      {/* <Footer /> */}
+      {/* <Review /> */}
+      <Profile />
+      <Footer />
     </>
   );
 }
