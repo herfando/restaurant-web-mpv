@@ -1,5 +1,4 @@
-import { Search } from 'lucide-react';
-import { Star } from 'lucide-react';
+import { Search, Star } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -106,24 +105,22 @@ export default function Home() {
 
       {/* 4.Detail recommended section */}
       <div className='custom-container mb-48 flex flex-wrap md:mb-100'>
-        <div>
-          <div className='flex items-center gap-12'>
-            <img
-              src='/images/04_burgerking.png'
-              alt='burgerking'
-              className='h-90 w-90 md:h-120 md:w-120'
-            />
-            <div className='space-y-2'>
-              <p className='text-md font-extrabold md:text-lg'>Burger King</p>
-              <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
-                <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
-                <span>4.9</span>
-              </p>
-              <p className='md:text-md text-sm'>
-                Jakarta Selatan <span>·</span>
-                <span> 2.4 km</span>
-              </p>
-            </div>
+        <div className='flex items-center gap-12'>
+          <img
+            src='/images/04_burgerking.png'
+            alt='burger'
+            className='h-90 w-90 md:h-120 md:w-120'
+          />
+          <div className='space-y-2'>
+            <p className='text-md font-extrabold md:text-lg'>burger king</p>
+            <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
+              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+              <span>4.9</span>
+            </p>
+            <p className='md:text-md text-sm'>
+              jakarta selatan <span>·</span>
+              <span> 2.4 km</span>
+            </p>
           </div>
         </div>
       </div>
