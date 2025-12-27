@@ -3,11 +3,21 @@ import Input from '@/components/ui/input';
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLogin } from '@/query/hooks/useAuth';
 
 export default function Login() {
+  //#region login
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const loginMutation = useLogin();
+  const handleLogin = () => {
+    loginMutation.mutate({ email, password });
+  };
+  //#endregion
+
   //#region hidden-show password
   const [show, setShow] = useState(false);
-  const [password, setPassword] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   //#endregion
 
   return (
@@ -49,15 +59,22 @@ export default function Login() {
               </Link>
             </div>
             {/* email */}
-            <Input placeholder='Email'></Input>
+            <Input
+              placeholder='Email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             {/* pasword */}
             <div className='relative'>
               <Input
-                type={show ? 'string' : 'password'}
-                value={password}
+                type={show ? 'text' : 'password'}
+                value={passwordInput}
                 placeholder='Password'
-                onChange={(e) => setPassword(e.target.value)}
-              ></Input>
+                onChange={(e) => {
+                  setPasswordInput(e.target.value);
+                  setPassword(e.target.value);
+                }}
+              />
               <button
                 onClick={() => setShow(!show)}
                 className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2 cursor-pointer'
@@ -74,7 +91,13 @@ export default function Login() {
               <span className='md:text-md tsssext-sm'>Remember Me</span>
             </label>
             {/* Button */}
-            <Button className='cursor-pointer'>Login</Button>
+            <Button
+              onClick={handleLogin}
+              disabled={loginMutation.isPending}
+              className='cursor-pointer'
+            >
+              {loginMutation.isPending ? 'Loading...' : 'Login'}
+            </Button>
           </div>
         </div>
       </div>

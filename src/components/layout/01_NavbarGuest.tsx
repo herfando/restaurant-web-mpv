@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavbarGuest() {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,11 +37,13 @@ export default function NavbarGuest() {
         {/* right */}
         <div className='hidden gap-16 md:flex'>
           <button
+            onClick={() => navigate('/login')}
             className={`text-md h-48 w-163 rounded-full font-bold hover:cursor-pointer ${scrolled ? 'border border-black text-black hover:bg-black hover:text-white' : 'border border-white text-white hover:bg-white hover:text-black'} `}
           >
             Sign In
           </button>
           <button
+            onClick={() => navigate('/register')}
             className={`text-md h-48 w-163 rounded-full font-bold hover:cursor-pointer ${scrolled ? 'border border-black text-black hover:bg-black hover:text-white' : 'border border-white text-white hover:bg-white hover:text-black'} `}
           >
             Sign Up
