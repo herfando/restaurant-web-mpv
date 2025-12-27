@@ -1,5 +1,5 @@
 // =====================
-// USER (SESUIAI RESPONSE)
+// USER (BASE ON RESPONSE)
 // =====================
 export type User = {
   id: number;
