@@ -3,13 +3,52 @@ import Input from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useRegister } from '@/query/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function Register() {
+  //#region
+  const navigate = useNavigate();
+  //#endregion
+
   //#region hidden-show password
-  const [show, setShow] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  //#endregion
+
+  //#region fetch data register
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [showConfirm, setShowConfirm] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const registerMutation = useRegister();
+  const handleRegister = () => {
+    if (password !== confirmPassword) {
+      toast.error('Password tidak sama');
+      return;
+    }
+
+    registerMutation.mutate(
+      {
+        name,
+        email,
+        phone,
+        password,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Register berhasil 🎉');
+          navigate('/login');
+        },
+        onError: (error: any) => {
+          toast.error(error?.response?.data?.message || 'Register gagal');
+        },
+      }
+    );
+  };
   //#endregion
 
   return (
@@ -40,7 +79,7 @@ export default function Register() {
             {/* Button sign up & sign in */}
             <div className='mx-auto flex h-56 w-full items-center justify-center gap-8 bg-[#F5F5F5] p-8'>
               <Link
-                to='/'
+                to='/login'
                 className='h-full w-full basis-1/2 content-center rounded-2xl text-center text-neutral-700'
               >
                 Sign in
@@ -50,43 +89,64 @@ export default function Register() {
               </button>
             </div>
             {/* Name */}
-            <Input placeholder='Name'></Input>
+            <Input
+              onChange={(e) => setName(e.target.value)}
+              placeholder='Name'
+            ></Input>
             {/* Email */}
-            <Input placeholder='Email'></Input>
+            <Input
+              placeholder='Email'
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
             {/* Number Phone */}
-            <Input placeholder='Number Phone'></Input>
+            <Input
+              placeholder='Number Phone'
+              onChange={(e) => setPhone(e.target.value)}
+            />
+
             {/* pasword */}
             <div className='relative'>
               <Input
-                type={show ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 placeholder='Password'
                 onChange={(e) => setPassword(e.target.value)}
-              ></Input>
+              />
+
               <button
-                onClick={() => setShow(!show)}
-                className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2 cursor-pointer'
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2'
               >
-                {show ? <Eye /> : <EyeOff />}
+                {showPassword ? <Eye /> : <EyeOff />}
               </button>
             </div>
             {/* Confirm Password */}
             <div className='relative'>
               <Input
-                type={showConfirm ? 'text' : 'ConfirmPassword'}
+                type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 placeholder='Confirm Password'
                 onChange={(e) => setConfirmPassword(e.target.value)}
-              ></Input>
+              />
+
               <button
-                onClick={() => setShowConfirm(!showConfirm)}
-                className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2 cursor-pointer'
+                type='button'
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2'
               >
-                {showConfirm ? <Eye /> : <EyeOff />}
+                {showConfirmPassword ? <Eye /> : <EyeOff />}
               </button>
             </div>
             {/* Button */}
-            <Button className='cursor-pointer'>Register</Button>
+            <Button
+              className='cursor-pointer'
+              onClick={handleRegister}
+              disabled={registerMutation.isPending}
+            >
+              {registerMutation.isPending ? 'Loading...' : 'Register'}
+            </Button>
           </div>
         </div>
       </div>
