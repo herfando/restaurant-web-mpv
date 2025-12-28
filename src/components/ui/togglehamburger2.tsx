@@ -49,7 +49,7 @@ export default function ToggleHamburger2({}) {
             : '-translate-x-full' // /* TRANSLATE HERE: menu geser keluar */
         }`}
       >
-        <div className='custom-container mt-64 flex h-72 w-full items-center justify-center gap-12 bg-white sm:hidden'>
+        <div className='custom-container mt-64 flex h-72 w-full items-center justify-center gap-12 bg-white md:hidden'>
           {/* Button Login & Register */}
           <Button
             onClick={() => navigate('/login')}

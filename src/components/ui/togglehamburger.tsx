@@ -60,7 +60,7 @@ export default function ToggleHamburger({ scrolled }: ToggleHamburgerProps) {
         }`}
       >
         <div
-          className={`custom-container mt-64 flex h-72 w-full items-center justify-center gap-12 sm:hidden ${scrolled ? 'bg-white' : 'bg-none'}`}
+          className={`custom-container mt-64 flex h-72 w-full items-center justify-center gap-12 md:hidden ${scrolled ? 'bg-white' : 'bg-none'}`}
         >
           {/* Button Login & Register */}
           <Button

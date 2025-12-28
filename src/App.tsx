@@ -4,7 +4,8 @@ import './index.css';
 // import Register from './pages/02_Register';
 // import AppRoutes from '@/routes/Routes';
 // import NavbarGuest from './components/layout/01_NavbarGuest';
-import NavbarGuest2 from './components/layout/01_NavbarGuest2';
+// import NavbarGuest2 from './components/layout/01_NavbarGuest2';
+import NavbarUser from '@/components/layout/02_NavbarUser';
 // import Home from '@/pages/03_Home';
 import Detail from './pages/04_Detail';
 // import Category from './pages/05_Category';
@@ -23,7 +24,8 @@ function App() {
       {/* <Login /> */}
       {/* <Register /> */}
       {/* <NavbarGuest /> */}
-      <NavbarGuest2 />
+      {/* <NavbarGuest2 /> */}
+      <NavbarUser />
       {/* <Home /> */}
       <Detail />
       {/* <Category /> */}
