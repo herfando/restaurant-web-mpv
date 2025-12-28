@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import ToggleHamburger from '../ui/togglehamburger';
+import ToggleHamburger2 from '../ui/togglehamburger2';
 import { Search } from 'lucide-react';
 
 export default function NavbarGuest2() {
   const navigate = useNavigate();
 
   return (
-    <section className={`mx-auto h-80 w-full`}>
+    <section className={`sticky top-0 z-10 mx-auto h-80 w-full bg-white`}>
       <div className='custom-container flex h-80 items-center justify-between'>
         {/* left */}
         <div className='flex items-center gap-15 hover:cursor-pointer'>
@@ -39,7 +39,7 @@ export default function NavbarGuest2() {
 
           {/* Hamburger */}
           <div>
-            <ToggleHamburger />
+            <ToggleHamburger2 />
           </div>
         </div>
 
