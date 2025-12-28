@@ -58,7 +58,7 @@ export default function AppRoutes() {
       </Route>
       {/* After Auth */}
       <Route element={<AfterAuthLayout />}>
-        <Route path='/' element={<Home />} />
+        <Route path='/home' element={<Home />} />
       </Route>
     </Routes>
   );

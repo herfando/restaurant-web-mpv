@@ -8,3 +8,5 @@ export default function Input(props: InputProps) {
     ></input>
   );
 }
+
+export { Input };

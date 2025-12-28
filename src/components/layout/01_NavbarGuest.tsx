@@ -1,5 +1,7 @@
+import { Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ToggleHamburger from '../ui/togglehamburger';
 
 export default function NavbarGuest() {
   const [scrolled, setScrolled] = useState(false);
@@ -34,6 +36,34 @@ export default function NavbarGuest() {
             Foody
           </h3>
         </div>
+
+        {/* bag & profil */}
+        <div className='flex items-center md:hidden'>
+          {/* Search */}
+          <Search
+            className={`z-2 mr-16 h-24 w-24 text-[Neutral/950] hover:cursor-pointer ${scrolled ? 'text-black' : 'text-white'}`}
+            onClick={() => navigate('/login')}
+          />
+          {/* bag */}
+          <div
+            className='relative z-2 hover:cursor-pointer'
+            onClick={() => navigate('/login')}
+          >
+            <img
+              src={
+                scrolled ? '/icons/14_cartblack.png' : '/icons/15_cartwhite.png'
+              }
+              alt='cart bag'
+              className='mr-24 h-28 w-28'
+            />
+          </div>
+
+          {/* Hamburger */}
+          <div>
+            <ToggleHamburger scrolled={scrolled} />
+          </div>
+        </div>
+
         {/* right */}
         <div className='hidden gap-16 md:flex'>
           <button

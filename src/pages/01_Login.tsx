@@ -2,22 +2,48 @@ import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogin } from '@/query/hooks/useAuth';
+import toast from 'react-hot-toast';
 
 export default function Login() {
-  //#region login
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const loginMutation = useLogin();
-  const handleLogin = () => {
-    loginMutation.mutate({ email, password });
-  };
+  //#region
+  const navigate = useNavigate();
   //#endregion
 
   //#region hidden-show password
   const [show, setShow] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  //#endregion
+
+  //#region login
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const loginMutation = useLogin();
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      toast.error('Email dan password wajib diisi');
+      return;
+    }
+
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          toast.success('Login berhasil 🎉');
+
+          // contoh simpan token (kalau ada)
+          // localStorage.setItem('token', res.token);
+
+          navigate('/home');
+        },
+        onError: (error: any) => {
+          toast.error(error?.response?.data?.message || 'Login gagal');
+        },
+      }
+    );
+  };
   //#endregion
 
   return (
