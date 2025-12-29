@@ -88,6 +88,7 @@ export default function NavbarUser() {
         <DropDown
           isOpen={isDropdownOpen}
           onClose={() => setIsDropdownOpen(false)}
+          user={user}
         />
       </div>
     </section>
