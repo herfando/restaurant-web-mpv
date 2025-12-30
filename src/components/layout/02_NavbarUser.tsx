@@ -1,8 +1,23 @@
-import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DropDown from '../ui/dropDown';
 
-export default function NavbarUser() {
+export default function NavbarGuest() {
+  //#region
+  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  //#endregion
+
+  //#region
   //#region trigger dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -14,7 +29,6 @@ export default function NavbarUser() {
   const [user, setUser] = useState<{ name: string; image?: string } | null>(
     null
   );
-  const navigate = useNavigate();
 
   // Load user data from localStorage register on mount
   useEffect(() => {
@@ -37,59 +51,74 @@ export default function NavbarUser() {
     return () => window.removeEventListener('userUpdated', handleUserUpdate);
   }, []);
 
-  return (
-    <section className='custom-container fixed left-1/2 z-2 flex h-80 w-full -translate-x-1/2 items-center justify-between bg-white'>
-      {/* Booky */}
-      <div
-        onClick={() => navigate('/home')}
-        className='my-19 flex items-center gap-x-15 hover:cursor-pointer'
-      >
-        <img
-          className='h-40 w-40 text-white md:h-42 md:w-42'
-          src='/icons/01_brandfoody.svg'
-          alt='brandfoody'
-        />
-        <h3 className='text-lg-lh hidden font-extrabold md:flex'>Foody</h3>
-      </div>
+  //#endregion
 
-      {/* Bag & profile */}
-      <div className='flex items-center'>
-        <div
-          className='relative hover:cursor-pointer'
-          onClick={() => navigate('/cart')}
-        >
+  return (
+    <section
+      className={`fixed z-10 mx-auto h-80 w-full ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}
+    >
+      <div className='custom-container flex h-80 items-center justify-between'>
+        {/* left */}
+        <div className='flex items-center gap-15 hover:cursor-pointer'>
           <img
-            src='/icons/14_cartblack.png'
-            alt='cart bag'
-            className='mr-24 h-32 w-32 hover:cursor-pointer'
+            className='h-40 w-40 text-white md:h-42 md:w-42'
+            src={
+              scrolled ? '/icons/01_brandfoody.svg' : '/icons/02_whitelogo.svg'
+            }
+            alt='brandfoody'
           />
+          <h3
+            className={`text-lg-lh hidden font-extrabold md:flex ${scrolled ? 'text-black' : 'text-white'} `}
+          >
+            Foody
+          </h3>
         </div>
 
-        {/* PROFILE + NAME = TRIGGER DROPDOWN */}
-        <div
-          onClick={toggleDropdown}
-          className='mr-16 flex items-center gap-12 hover:cursor-pointer'
-        >
-          {/* Profile picture */}
-          <div className='flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-gray-200'>
-            {!user?.image && <span className='text-3xl text-gray-400'>👤</span>}
-            {user?.image && <img src={user.image} alt='profile' />}
+        {/* Bag & profile */}
+        <div className='flex items-center'>
+          <div
+            className='relative hover:cursor-pointer'
+            onClick={() => navigate('/cart')}
+          >
+            <img
+              src={
+                scrolled ? '/icons/14_cartblack.png' : '/icons/15_cartwhite.png'
+              }
+              alt='cart bag'
+              className='mr-24 h-28 w-28 md:mr-16 md:h-32 md:w-32'
+            />
           </div>
 
-          {/* Name */}
-          {user && (
-            <p className='hidden text-[18px] font-semibold md:flex'>
-              {user.name}
-            </p>
-          )}
-        </div>
+          {/* PROFILE + NAME = TRIGGER DROPDOWN */}
+          <div
+            onClick={toggleDropdown}
+            className='mr-16 flex items-center gap-12 hover:cursor-pointer'
+          >
+            {/* Profile picture */}
+            <div className='flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-gray-200 md:h-48 md:w-48'>
+              {!user?.image && (
+                <span className='text-3xl text-gray-400'>👤</span>
+              )}
+              {user?.image && <img src={user.image} alt='profile' />}
+            </div>
 
-        {/* DROPDOWN */}
-        <DropDown
-          isOpen={isDropdownOpen}
-          onClose={() => setIsDropdownOpen(false)}
-          user={user}
-        />
+            {/* Name */}
+            {user && (
+              <p
+                className={`hidden text-[18px] font-semibold md:flex ${scrolled ? 'text-black' : 'text-white'} `}
+              >
+                {user.name}
+              </p>
+            )}
+          </div>
+
+          {/* DROPDOWN */}
+          <DropDown
+            isOpen={isDropdownOpen}
+            onClose={() => setIsDropdownOpen(false)}
+            user={user}
+          />
+        </div>
       </div>
     </section>
   );

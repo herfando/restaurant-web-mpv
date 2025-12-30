@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import DropDown from '../ui/dropDown';
 
-export default function NavbarUser2() {
+export default function NavbarUser3() {
   //#region trigger dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

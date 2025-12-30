@@ -14,8 +14,8 @@ export default function DropDown({ isOpen, onClose, user }: DropDownProps) {
   if (!isOpen) return null;
 
   return (
-    <div className='fixed top-64 right-16 z-1 h-197 w-197 rounded-b-4xl bg-white text-black shadow-sm md:top-80 md:right-50'>
-      <div className='custom-container flex h-197 w-full flex-col justify-between gap-12 p-16'>
+    <div className='fixed top-64 right-16 z-1 h-200 w-197 rounded-2xl bg-white text-black shadow-sm md:top-80 md:right-50'>
+      <div className='custom-container flex h-200 w-full flex-col justify-between gap-12 p-16'>
         <div className='flex items-center gap-x-8'>
           {/* Profile picture */}
           <div className='flex h-36 w-36 items-center justify-center overflow-hidden rounded-full bg-gray-200'>
