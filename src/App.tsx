@@ -5,9 +5,10 @@ import './index.css';
 // import AppRoutes from '@/routes/Routes';
 // import NavbarGuest from './components/layout/01_NavbarGuest';
 // import NavbarGuest2 from './components/layout/01_NavbarGuest2';
-import NavbarUser from '@/components/layout/02_NavbarUser';
-// import Home from '@/pages/03_Home';
-import Detail from './pages/04_Detail';
+// import NavbarUser from '@/components/layout/02_NavbarUser';
+// import NavbarUser2 from './components/layout/02_NavbarUser2';
+import Home from '@/pages/03_Home';
+// import Detail from './pages/04_Detail';
 // import Category from './pages/05_Category';
 // import MyCart from './pages/06_MyCart';
 // import CheckOut from './pages/07_CheckOut';
@@ -25,9 +26,10 @@ function App() {
       {/* <Register /> */}
       {/* <NavbarGuest /> */}
       {/* <NavbarGuest2 /> */}
-      <NavbarUser />
-      {/* <Home /> */}
-      <Detail />
+      {/* <NavbarUser /> */}
+      {/* <NavbarUser2 /> */}
+      <Home />
+      {/* <Detail /> */}
       {/* <Category /> */}
       {/* <MyCart /> */}
       {/* <CheckOut /> */}
