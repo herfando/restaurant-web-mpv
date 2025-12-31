@@ -2,12 +2,12 @@ import './index.css';
 
 // import Login from '@/pages/01_Login';
 // import Register from './pages/02_Register';
-// import AppRoutes from '@/routes/Routes';
+import AppRoutes from '@/routes/Routes';
 // import NavbarGuest from './components/layout/01_NavbarGuest';
 // import NavbarGuest2 from './components/layout/01_NavbarGuest2';
 // import NavbarUser from '@/components/layout/02_NavbarUser';
 // import NavbarUser2 from './components/layout/02_NavbarUser2';
-import Home from '@/pages/03_Home';
+// import Home from '@/pages/03_Home';
 // import Detail from './pages/04_Detail';
 // import Category from './pages/05_Category';
 // import MyCart from './pages/06_MyCart';
@@ -21,14 +21,14 @@ import Home from '@/pages/03_Home';
 function App() {
   return (
     <>
-      {/* <AppRoutes /> */}
+      <AppRoutes />
       {/* <Login /> */}
       {/* <Register /> */}
       {/* <NavbarGuest /> */}
       {/* <NavbarGuest2 /> */}
       {/* <NavbarUser /> */}
       {/* <NavbarUser2 /> */}
-      <Home />
+      {/* <Home /> */}
       {/* <Detail /> */}
       {/* <Category /> */}
       {/* <MyCart /> */}
