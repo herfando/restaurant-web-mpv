@@ -1,8 +1,8 @@
 import './index.css';
 
-import Login from '@/pages/01_Login';
+// import Login from '@/pages/01_Login';
 // import Register from './pages/02_Register';
-// import AppRoutes from '@/routes/Routes';
+import AppRoutes from '@/routes/Routes';
 // import NavbarGuest from './components/layout/01_NavbarGuest';
 // import NavbarGuest2 from './components/layout/01_NavbarGuest2';
 // import NavbarUser from '@/components/layout/02_NavbarUser';
@@ -21,8 +21,8 @@ import Login from '@/pages/01_Login';
 function App() {
   return (
     <>
-      {/* <AppRoutes /> */}
-      <Login />
+      <AppRoutes />
+      {/* <Login /> */}
       {/* <Register /> */}
       {/* <NavbarGuest /> */}
       {/* <NavbarGuest2 /> */}
