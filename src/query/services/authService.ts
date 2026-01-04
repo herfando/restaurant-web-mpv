@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { api } from '@/query/api';
+
 import type {
   LoginRequest,
   LoginResponse,
@@ -8,10 +9,6 @@ import type {
   UpdateProfileRequest,
   UpdateProfileResponse,
 } from '@/query/types/authType';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-});
 
 // =====================
 // REGISTER
