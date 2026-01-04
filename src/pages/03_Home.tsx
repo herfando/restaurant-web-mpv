@@ -1,6 +1,31 @@
 import { Search, Star } from 'lucide-react';
+import { useState } from 'react';
+import Category from './05_Category';
+import {
+  useRestaurants,
+  useNearbyRestaurants,
+  useBestSellerRestaurants,
+  useRecommendedRestaurants,
+} from '@/query/hooks/useRestaurant';
+
+type Category =
+  | 'recommended'
+  | 'nearby'
+  | 'discount'
+  | 'bestseller'
+  | 'delivery'
+  | 'lunch';
 
 export default function Home() {
+  // 1. State for active category
+  const [activeCategory, setActiveCategory] = useState<Category>('recommended');
+
+  // 2. Hook API calls
+  const recommendedQuery = useRecommendedRestaurants();
+  const allQuery = useRestaurants();
+  const nearbyQuery = useNearbyRestaurants();
+  const bestSellerQuery = useBestSellerRestaurants();
+
   return (
     <section>
       {/* 1.Hero section */}
@@ -14,6 +39,7 @@ export default function Home() {
           />
           <div className='absolute inset-0 top-0 left-0 h-[clamp(648px,57vw,827px)] w-full bg-linear-to-b from-black/80'></div>
         </div>
+
         {/* 2. card search */}
         <div className='absolute top-1/2 right-1/2 w-[clamp(349px,57vw,712px)] translate-x-1/2 -translate-y-1/2 text-center text-white'>
           <h2 className='text-[clamp(36px,3vw,48px)] font-extrabold lg:whitespace-nowrap'>
@@ -34,8 +60,10 @@ export default function Home() {
 
       {/* 2.Category section */}
       <div className='custom-container my-24 grid grid-cols-3 justify-between space-y-20 space-x-20 md:my-48 md:grid-cols-6 md:space-x-[46.8px]'>
-        {/* Restaurant */}
-        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+        <div
+          className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'
+          onClick={() => setActiveCategory('delivery')}
+        >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
             src='/images/03_restaurant.png'
@@ -43,8 +71,11 @@ export default function Home() {
           />
           <p className='text-sm font-bold md:text-lg'>All Restaurant</p>
         </div>
-        {/* Nearby */}
-        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+
+        <div
+          className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'
+          onClick={() => setActiveCategory('nearby')}
+        >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
             src='/images/05_nearby.png'
@@ -52,8 +83,11 @@ export default function Home() {
           />
           <p className='text-sm font-bold md:text-lg'>Nearby</p>
         </div>
-        {/* Discount */}
-        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+
+        <div
+          className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'
+          onClick={() => setActiveCategory('discount')}
+        >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
             src='/images/06_discount.png'
@@ -61,8 +95,11 @@ export default function Home() {
           />
           <p className='text-sm font-bold md:text-lg'>Discount</p>
         </div>
-        {/* Bestseller */}
-        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+
+        <div
+          className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'
+          onClick={() => setActiveCategory('bestseller')}
+        >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
             src='/images/07_bestseller.png'
@@ -70,8 +107,11 @@ export default function Home() {
           />
           <p className='text-sm font-bold md:text-lg'>Best Seller</p>
         </div>
-        {/* Delivery */}
-        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+
+        <div
+          className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'
+          onClick={() => setActiveCategory('delivery')}
+        >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
             src='/images/08_delivery.png'
@@ -79,8 +119,11 @@ export default function Home() {
           />
           <p className='text-sm font-bold md:text-lg'>Delivery</p>
         </div>
-        {/* Lunch */}
-        <div className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'>
+
+        <div
+          className='flex flex-col items-center justify-center space-y-30 md:space-y-23.5'
+          onClick={() => setActiveCategory('lunch')}
+        >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
             src='/images/09_lunch.png'
@@ -92,7 +135,6 @@ export default function Home() {
 
       {/* 3. Recommended section */}
       <div className='custom-container'>
-        {/* recommended title */}
         <div className='mb-16 flex items-center justify-between md:mb-32'>
           <h2 className='md:text-lg-lh text-xs-lh font-extrabold'>
             Recommended
@@ -105,24 +147,83 @@ export default function Home() {
 
       {/* 4.Detail recommended section */}
       <div className='custom-container mb-48 flex flex-wrap md:mb-100'>
-        <div className='flex items-center gap-12'>
-          <img
-            src='/images/04_burgerking.png'
-            alt='burger'
-            className='h-90 w-90 md:h-120 md:w-120'
-          />
-          <div className='space-y-2'>
-            <p className='text-md font-extrabold md:text-lg'>burger king</p>
-            <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
-              <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
-              <span>4.9</span>
-            </p>
-            <p className='md:text-md text-sm'>
-              jakarta selatan <span>·</span>
-              <span> 2.4 km</span>
-            </p>
-          </div>
-        </div>
+        {activeCategory === 'recommended' &&
+          recommendedQuery.data?.data.recommendations.map((item) => (
+            <div key={item.id} className='flex items-center gap-12'>
+              <img
+                src={item.logo}
+                alt={item.name}
+                className='h-90 w-90 md:h-120 md:w-120'
+              />
+              <div className='space-y-2'>
+                <p className='text-md font-extrabold md:text-lg'>{item.name}</p>
+                <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
+                  <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+                  <span>{item.star}</span>
+                </p>
+                <p className='md:text-md text-sm'>{item.place}</p>
+              </div>
+            </div>
+          ))}
+
+        {activeCategory === 'nearby' &&
+          nearbyQuery.data?.data.restaurants.map((item) => (
+            <div key={item.id} className='flex items-center gap-12'>
+              <img
+                src={item.logo}
+                alt={item.name}
+                className='h-90 w-90 md:h-120 md:w-120'
+              />
+              <div className='space-y-2'>
+                <p className='text-md font-extrabold md:text-lg'>{item.name}</p>
+                <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
+                  <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+                  <span>{item.star}</span>
+                </p>
+                <p className='md:text-md text-sm'>{item.place}</p>
+              </div>
+            </div>
+          ))}
+
+        {activeCategory === 'bestseller' &&
+          bestSellerQuery.data?.data.restaurants.map((item) => (
+            <div key={item.id} className='flex items-center gap-12'>
+              <img
+                src={item.logo}
+                alt={item.name}
+                className='h-90 w-90 md:h-120 md:w-120'
+              />
+              <div className='space-y-2'>
+                <p className='text-md font-extrabold md:text-lg'>{item.name}</p>
+                <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
+                  <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+                  <span>{item.star}</span>
+                </p>
+                <p className='md:text-md text-sm'>{item.place}</p>
+              </div>
+            </div>
+          ))}
+
+        {(activeCategory === 'discount' ||
+          activeCategory === 'delivery' ||
+          activeCategory === 'lunch') &&
+          allQuery.data?.data.restaurants.map((item) => (
+            <div key={item.id} className='flex items-center gap-12'>
+              <img
+                src={item.logo}
+                alt={item.name}
+                className='h-90 w-90 md:h-120 md:w-120'
+              />
+              <div className='space-y-2'>
+                <p className='text-md font-extrabold md:text-lg'>{item.name}</p>
+                <p className='md:text-md flex items-center gap-2 text-sm md:gap-4'>
+                  <Star className='h-24 w-24 fill-[#FFAB0D] text-[#FFAB0D]' />
+                  <span>{item.star}</span>
+                </p>
+                <p className='md:text-md text-sm'>{item.place}</p>
+              </div>
+            </div>
+          ))}
       </div>
     </section>
   );
