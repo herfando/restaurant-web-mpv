@@ -1,4 +1,4 @@
-// src/query/hooks/useAuth.ts
+
 import { useMutation } from '@tanstack/react-query';
 import {
   registerApi,
