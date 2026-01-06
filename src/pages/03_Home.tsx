@@ -180,7 +180,7 @@ export default function Home() {
               navigate(`/restaurant/${item.id}`, { state: { fromHome: true } })
             }
             key={item.id}
-            className='flex items-center gap-12'
+            className='flex items-center gap-12 hover:cursor-pointer'
           >
             <img
               src={item.logo}
