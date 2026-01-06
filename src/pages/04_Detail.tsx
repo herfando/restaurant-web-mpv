@@ -101,16 +101,19 @@ export default function Detail() {
       </div>
 
       {/* picture menu */}
-      <div className='grid grid-cols-2 gap-x-16 gap-y-16 md:grid-cols-3 md:gap-x-20 md:gap-y-24 lg:grid-cols-4'>
+      <div className='flex flex-wrap justify-center gap-x-16 gap-y-16 md:justify-start md:gap-x-20 md:gap-y-24 lg:justify-start'>
         {menus.map((menu, idx) => (
           <div
             key={idx}
             className='w-285 space-y-16 space-x-16 md:space-y-24 md:space-x-20'
           >
-            <img
-              src={menu.image || '/images/14_image5.png'}
-              alt={menu.foodName}
-            />
+            <div className='flex w-full justify-center'>
+              <img
+                src={menu.image || '/images/14_image5.png'}
+                alt={menu.foodName}
+                className='h-172.5 w-172.5 object-cover md:h-285 md:w-285'
+              />
+            </div>
             <div className='flex flex-col justify-between space-y-16 p-16 md:flex-row'>
               <p className='flex flex-col'>
                 <span className='md:text-md text-sm'>{menu.foodName}</span>
