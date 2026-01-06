@@ -101,7 +101,7 @@ export default function Detail() {
       </div>
 
       {/* picture menu */}
-      <div className='flex gap-x-16 gap-y-16 md:gap-x-20 md:gap-y-24'>
+      <div className='grid grid-cols-2 gap-x-16 gap-y-16 md:grid-cols-3 md:gap-x-20 md:gap-y-24 lg:grid-cols-4'>
         {menus.map((menu, idx) => (
           <div
             key={idx}
