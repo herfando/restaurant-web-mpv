@@ -1,61 +1,61 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DropDown from '../ui/dropDown';
+import { useCartStore } from '@/zustand/cartStore';
+import type { CartItem } from '@/zustand/cartStore';
 
 export default function NavbarGuest() {
-  //#region
+  //#region scroll state
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   //#endregion
 
-  //#region
   //#region trigger dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   //#endregion
 
+  //#region user state
   const [user, setUser] = useState<{ name: string; image?: string } | null>(
     null
   );
 
-  // Load user data from localStorage register on mount
   useEffect(() => {
     const storedRegisterUser = localStorage.getItem('registerUser');
-    if (storedRegisterUser) {
+    if (storedRegisterUser)
       setUser(JSON.parse(storedRegisterUser)?.user || null);
-    }
   }, []);
 
-  // Listen for custom event from Profile.tsx to update immediately
   useEffect(() => {
     const handleUserUpdate = () => {
       const storedRegisterUser = localStorage.getItem('registerUser');
-      if (storedRegisterUser) {
+      if (storedRegisterUser)
         setUser(JSON.parse(storedRegisterUser)?.user || null);
-      }
     };
-
     window.addEventListener('userUpdated', handleUserUpdate);
     return () => window.removeEventListener('userUpdated', handleUserUpdate);
   }, []);
+  //#endregion
 
+  //#region cart state
+  const cart = useCartStore((state) => state.cart);
+  const totalItems = cart.reduce(
+    (acc: number, item: CartItem) => acc + item.quantity,
+    0
+  );
   //#endregion
 
   return (
     <section
-      className={`fixed z-10 mx-auto h-80 w-full ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}
+      className={`fixed z-10 mx-auto h-80 w-full ${
+        scrolled ? 'bg-white shadow-md' : 'bg-transparent'
+      }`}
     >
       <div className='custom-container flex h-80 items-center justify-between'>
         {/* left */}
@@ -68,7 +68,9 @@ export default function NavbarGuest() {
             alt='brandfoody'
           />
           <h3
-            className={`text-lg-lh hidden font-extrabold md:flex ${scrolled ? 'text-black' : 'text-white'} `}
+            className={`text-lg-lh hidden font-extrabold md:flex ${
+              scrolled ? 'text-black' : 'text-white'
+            } `}
           >
             Foody
           </h3>
@@ -87,6 +89,12 @@ export default function NavbarGuest() {
               alt='cart bag'
               className='mr-24 h-28 w-28 md:mr-16 md:h-32 md:w-32'
             />
+            {/* ===== TOTAL ITEMS BADGE ===== */}
+            {totalItems > 0 && (
+              <span className='absolute -top-2 right-18 flex h-20 w-20 items-center justify-center rounded-full bg-[#C12116] text-xs font-bold text-white'>
+                {totalItems}
+              </span>
+            )}
           </div>
 
           {/* PROFILE + NAME = TRIGGER DROPDOWN */}
@@ -105,7 +113,9 @@ export default function NavbarGuest() {
             {/* Name */}
             {user && (
               <p
-                className={`hidden text-[18px] font-semibold md:flex ${scrolled ? 'text-black' : 'text-white'} `}
+                className={`hidden text-[18px] font-semibold md:flex ${
+                  scrolled ? 'text-black' : 'text-white'
+                } `}
               >
                 {user.name}
               </p>
