@@ -31,7 +31,7 @@ export default function Detail() {
   const heroImage = restaurant.images[0] || '/images/10_image1.png';
   const sideImages = heroImages.slice(1, 4);
 
-  // ===== SHARE FUNCTION (DITAMBAHKAN) =====
+  // ===== SHARE FUNCTION  =====
   const handleShare = async () => {
     const url = window.location.href;
 
@@ -112,7 +112,7 @@ export default function Detail() {
         {/* SHARE BUTTON (DITAMBAHKAN onClick) */}
         <div
           onClick={handleShare}
-          className='flex h-44 w-44 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] hover:cursor-pointer md:w-140'
+          className='flex h-44 w-44 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] font-semibold hover:cursor-pointer hover:border-[#C12116] hover:bg-[#FFECEC] hover:text-[#C12116] md:w-140'
         >
           <img src='/icons/07_iconshare.png' alt='share icon' />
           <span className='hidden md:block'>Share</span>
