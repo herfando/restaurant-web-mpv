@@ -31,6 +31,31 @@ export default function Detail() {
   const heroImage = restaurant.images[0] || '/images/10_image1.png';
   const sideImages = heroImages.slice(1, 4);
 
+  // ===== SHARE FUNCTION (DITAMBAHKAN) =====
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: restaurant.name,
+          text: `Cek restoran ${restaurant.name} ini yuk!`,
+          url,
+        });
+      } catch (err) {
+        // user cancel share
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Link berhasil disalin!');
+      } catch (err) {
+        alert('Gagal menyalin link');
+      }
+    }
+  };
+  // ======================================
+
   return (
     <section className='custom-container'>
       {/* 1. HeroImage */}
@@ -83,7 +108,12 @@ export default function Detail() {
             </p>
           </div>
         </div>
-        <div className='flex h-44 w-44 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] hover:cursor-pointer md:w-140'>
+
+        {/* SHARE BUTTON (DITAMBAHKAN onClick) */}
+        <div
+          onClick={handleShare}
+          className='flex h-44 w-44 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] hover:cursor-pointer md:w-140'
+        >
           <img src='/icons/07_iconshare.png' alt='share icon' />
           <span className='hidden md:block'>Share</span>
         </div>
