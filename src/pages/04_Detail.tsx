@@ -1,40 +1,64 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { useRestaurantDetail } from '@/query/hooks/useRestaurant';
 import { useState } from 'react';
 
+import { useAuthStore } from '@/zustand/authStore';
+import { useCartStore } from '@/zustand/cartStore';
+
 export default function Detail() {
+  //#region Zustand & Router
+  const user = useAuthStore((state) => state.user);
+  const addToCart = useCartStore((state) => state.add);
+  const navigate = useNavigate();
+  //#endregion
+
+  //#region Params & Query
   const { restaurantId } = useParams<{ restaurantId: string }>();
   const id = Number(restaurantId);
-
   const restaurantQuery = useRestaurantDetail(id);
-
-  const [activeFilter, setActiveFilter] = useState<'all' | 'food' | 'drink'>(
-    'all'
-  );
 
   const restaurant = restaurantQuery.data?.data;
   const menus = restaurant?.menus || [];
   const reviews = restaurant?.reviews || [];
+  //#endregion
+
+  //#region State Filter Menu
+  const [activeFilter, setActiveFilter] = useState<'all' | 'food' | 'drink'>(
+    'all'
+  );
 
   const filteredMenus =
     activeFilter === 'all'
       ? menus
       : menus.filter((menu) => menu.type === activeFilter);
+  //#endregion
 
+  //#region Loading/Error Guard
   if (restaurantQuery.isLoading) return null;
   if (restaurantQuery.isError) return null;
   if (!restaurant) return null;
+  //#endregion
 
-  // HeroImage sebagai banner restoran (gambar pertama di array images)
+  //#region Add to Cart
+  const handleAdd = (productId: number) => {
+    if (user) {
+      addToCart(productId);
+    } else {
+      navigate('/login');
+    }
+  };
+  //#endregion
+
+  //#region Hero Images
   const heroImages = restaurant.images || [];
   const heroImage = restaurant.images[0] || '/images/10_image1.png';
   const sideImages = heroImages.slice(1, 4);
+  //#endregion
 
-  // ===== SHARE FUNCTION  =====
+  //#region Share Function
   const handleShare = async () => {
     const url = window.location.href;
-
     if (navigator.share) {
       try {
         await navigator.share({
@@ -42,19 +66,17 @@ export default function Detail() {
           text: `Cek restoran ${restaurant.name} ini yuk!`,
           url,
         });
-      } catch (err) {
-        // user cancel share
-      }
+      } catch {}
     } else {
       try {
         await navigator.clipboard.writeText(url);
         alert('Link berhasil disalin!');
-      } catch (err) {
+      } catch {
         alert('Gagal menyalin link');
       }
     }
   };
-  // ======================================
+  //#endregion
 
   return (
     <section className='custom-container'>
@@ -109,7 +131,7 @@ export default function Detail() {
           </div>
         </div>
 
-        {/* SHARE BUTTON (DITAMBAHKAN onClick) */}
+        {/* SHARE BUTTON */}
         <div
           onClick={handleShare}
           className='flex h-44 w-44 items-center justify-center gap-x-12 rounded-full border border-[#D5D7DA] font-semibold hover:cursor-pointer hover:border-[#C12116] hover:bg-[#FFECEC] hover:text-[#C12116] md:w-140'
@@ -163,9 +185,9 @@ export default function Detail() {
 
       {/* picture menu */}
       <div className='flex flex-wrap justify-center gap-x-16 gap-y-16 md:justify-start md:gap-x-20 md:gap-y-24 lg:justify-start'>
-        {filteredMenus.map((menu, idx) => (
+        {filteredMenus.map((menu) => (
           <div
-            key={idx}
+            key={menu.id} // pastikan id ada di tipe Menu
             className='w-285 space-y-16 space-x-16 md:space-y-24 md:space-x-20'
           >
             <div className='flex w-full justify-center'>
@@ -182,7 +204,12 @@ export default function Detail() {
                   Rp{menu.price}
                 </span>
               </p>
-              <div className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white md:h-40 md:w-79'>
+
+              {/* Add Button */}
+              <div
+                onClick={() => handleAdd(menu.id)}
+                className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white md:h-40 md:w-79'
+              >
                 Add
               </div>
             </div>

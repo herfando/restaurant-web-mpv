@@ -1,45 +1,49 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import DropDown from '../ui/dropDown';
+import { useCartStore } from '@/zustand/cartStore';
+import type { CartItem } from '@/zustand/cartStore';
 
 export default function NavbarUser2() {
-  //#region trigger dropdown
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+  //#region cart state
+  const cart = useCartStore((state) => state.cart);
+  const totalItems = cart.reduce(
+    (acc: number, item: CartItem) => acc + item.quantity,
+    0
+  );
   //#endregion
 
+  //#region trigger dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+  //#endregion
+
+  //#region user state
   const [user, setUser] = useState<{ name: string; image?: string } | null>(
     null
   );
   const navigate = useNavigate();
 
-  // Load user data from localStorage register on mount
   useEffect(() => {
     const storedRegisterUser = localStorage.getItem('registerUser');
-    if (storedRegisterUser) {
+    if (storedRegisterUser)
       setUser(JSON.parse(storedRegisterUser)?.user || null);
-    }
   }, []);
 
-  // Listen for custom event from Profile.tsx to update immediately
   useEffect(() => {
     const handleUserUpdate = () => {
       const storedRegisterUser = localStorage.getItem('registerUser');
-      if (storedRegisterUser) {
+      if (storedRegisterUser)
         setUser(JSON.parse(storedRegisterUser)?.user || null);
-      }
     };
-
     window.addEventListener('userUpdated', handleUserUpdate);
     return () => window.removeEventListener('userUpdated', handleUserUpdate);
   }, []);
+  //#endregion
 
   return (
     <section className='custom-container fixed left-1/2 z-2 flex h-80 w-full -translate-x-1/2 items-center justify-between bg-white'>
-      {/* Booky */}
+      {/* ===== LOGO / HOME ===== */}
       <div
         onClick={() => navigate('/home')}
         className='my-19 flex items-center gap-x-15 hover:cursor-pointer'
@@ -52,8 +56,9 @@ export default function NavbarUser2() {
         <h3 className='text-lg-lh hidden font-extrabold md:flex'>Foody</h3>
       </div>
 
-      {/* Bag & profile */}
+      {/* ===== BAG & PROFILE ===== */}
       <div className='flex items-center'>
+        {/* Cart */}
         <div
           className='relative hover:cursor-pointer'
           onClick={() => navigate('/cart')}
@@ -61,8 +66,13 @@ export default function NavbarUser2() {
           <img
             src='/icons/14_cartblack.png'
             alt='cart bag'
-            className='mr-24 h-32 w-32 hover:cursor-pointer'
+            className='mr-24 h-28 w-28 hover:cursor-pointer md:h-32 md:w-32'
           />
+          {totalItems > 0 && (
+            <span className='absolute -top-2 right-18 flex h-20 w-20 items-center justify-center rounded-full bg-[#C12116] text-xs font-bold text-white'>
+              {totalItems}
+            </span>
+          )}
         </div>
 
         {/* PROFILE + NAME = TRIGGER DROPDOWN */}
@@ -70,13 +80,10 @@ export default function NavbarUser2() {
           onClick={toggleDropdown}
           className='mr-16 flex items-center gap-12 hover:cursor-pointer'
         >
-          {/* Profile picture */}
           <div className='flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-gray-200'>
             {!user?.image && <span className='text-3xl text-gray-400'>👤</span>}
             {user?.image && <img src={user.image} alt='profile' />}
           </div>
-
-          {/* Name */}
           {user && (
             <p className='hidden text-[18px] font-semibold md:flex'>
               {user.name}
