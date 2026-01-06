@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { useRestaurantDetail } from '@/query/hooks/useRestaurant';
+import { useState } from 'react';
 
 export default function Detail() {
   const { restaurantId } = useParams<{ restaurantId: string }>();
@@ -8,9 +9,18 @@ export default function Detail() {
 
   const restaurantQuery = useRestaurantDetail(id);
 
+  const [activeFilter, setActiveFilter] = useState<'all' | 'food' | 'drink'>(
+    'all'
+  );
+
   const restaurant = restaurantQuery.data?.data;
   const menus = restaurant?.menus || [];
   const reviews = restaurant?.reviews || [];
+
+  const filteredMenus =
+    activeFilter === 'all'
+      ? menus
+      : menus.filter((menu) => menu.type === activeFilter);
 
   if (restaurantQuery.isLoading) return null;
   if (restaurantQuery.isError) return null;
@@ -33,7 +43,7 @@ export default function Detail() {
         <div className='hidden space-y-20 md:block'>
           {sideImages[0] && (
             <img
-              className='h-302 max-w-529 rounded-2xl object-cover'
+              className='h-[clamp(80px,29vw,302px)] w-[clamp(234px,90vw,529px)] rounded-2xl object-cover'
               src={sideImages[0]}
               alt={`${restaurant.name} banner`}
             />
@@ -42,7 +52,7 @@ export default function Detail() {
             {sideImages.slice(1).map((img, idx) => (
               <img
                 key={idx}
-                className='h-148 max-w-254.5 rounded-2xl object-cover'
+                className='h-[clamp(20px,14vw,148px)] w-[clamp(74px,45vw,254px)] rounded-2xl'
                 src={img}
                 alt={`${restaurant.name} banner ${idx + 2}`}
               />
@@ -88,13 +98,34 @@ export default function Detail() {
           Menu
         </div>
         <div className='mb-16 flex gap-x-8 md:mb-24 md:gap-x-12'>
-          <div className='h-40 w-90 content-center rounded-full border border-[#C12116] bg-[#FFECEC] text-center font-bold text-[#C12116] hover:cursor-pointer md:h-46 md:w-98'>
+          <div
+            onClick={() => setActiveFilter('all')}
+            className={`h-40 w-90 content-center rounded-full border text-center hover:cursor-pointer md:h-46 md:w-98 ${
+              activeFilter === 'all'
+                ? 'border-[#C12116] bg-[#FFECEC] font-bold text-[#C12116]'
+                : 'border-[#D5D7DA] font-semibold'
+            }`}
+          >
             All Menu
           </div>
-          <div className='h-40 w-90 content-center rounded-full border border-[#D5D7DA] text-center font-semibold hover:cursor-pointer md:h-46 md:w-98'>
+          <div
+            onClick={() => setActiveFilter('food')}
+            className={`h-40 w-90 content-center rounded-full border text-center hover:cursor-pointer md:h-46 md:w-98 ${
+              activeFilter === 'food'
+                ? 'border-[#C12116] bg-[#FFECEC] font-bold text-[#C12116]'
+                : 'border-[#D5D7DA] font-semibold'
+            }`}
+          >
             Food
           </div>
-          <div className='h-40 w-90 content-center rounded-full border border-[#D5D7DA] text-center font-semibold hover:cursor-pointer md:h-46 md:w-98'>
+          <div
+            onClick={() => setActiveFilter('drink')}
+            className={`h-40 w-90 content-center rounded-full border text-center hover:cursor-pointer md:h-46 md:w-98 ${
+              activeFilter === 'drink'
+                ? 'border-[#C12116] bg-[#FFECEC] font-bold text-[#C12116]'
+                : 'border-[#D5D7DA] font-semibold'
+            }`}
+          >
             Drink
           </div>
         </div>
@@ -102,7 +133,7 @@ export default function Detail() {
 
       {/* picture menu */}
       <div className='flex flex-wrap justify-center gap-x-16 gap-y-16 md:justify-start md:gap-x-20 md:gap-y-24 lg:justify-start'>
-        {menus.map((menu, idx) => (
+        {filteredMenus.map((menu, idx) => (
           <div
             key={idx}
             className='w-285 space-y-16 space-x-16 md:space-y-24 md:space-x-20'
