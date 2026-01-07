@@ -4,13 +4,14 @@ import { useRestaurantDetail } from '@/query/hooks/useRestaurant';
 import { useState } from 'react';
 
 import { useAuthStore } from '@/zustand/authStore';
-import { useCartStore } from '@/zustand/cartStore';
+import { useCart } from '@/query/hooks/useCart'; // pakai hooks baru
 
 export default function Detail() {
   //#region Zustand & Router
   const user = useAuthStore((state) => state.user);
-  const addToCart = useCartStore((state) => state.add);
   const navigate = useNavigate();
+  const { cart, add, update, remove } = useCart(); // hook cart
+
   //#endregion
 
   //#region Params & Query
@@ -40,16 +41,6 @@ export default function Detail() {
   if (!restaurant) return null;
   //#endregion
 
-  //#region Add to Cart
-  const handleAdd = (productId: number) => {
-    if (user) {
-      addToCart(productId);
-    } else {
-      navigate('/login');
-    }
-  };
-  //#endregion
-
   //#region Hero Images
   const heroImages = restaurant.images || [];
   const heroImage = restaurant.images[0] || '/images/10_image1.png';
@@ -76,6 +67,61 @@ export default function Detail() {
       }
     }
   };
+  //#endregion
+
+  //#region Helper functions tombol Add / Counter
+  const getCount = (menuId: number) => {
+    for (const rest of cart) {
+      const item = rest.items.find(
+        (i: { id: number; quantity: number; menu: { id: number } }) =>
+          i.menu.id === menuId
+      );
+      if (item) return item.quantity;
+    }
+    return 0;
+  };
+
+  const handleAdd = (menuId: number) => {
+    if (!user) return navigate('/login');
+    add({ restaurantId: restaurant.id, menuId, quantity: 1 });
+  };
+
+  const handleIncrement = (menuId: number) => {
+    for (const rest of cart) {
+      const item = rest.items.find(
+        (i: { id: number; quantity: number; menu: { id: number } }) =>
+          i.menu.id === menuId
+      );
+
+      if (item) return update({ id: item.id, quantity: item.quantity + 1 });
+    }
+    handleAdd(menuId);
+  };
+
+  const handleDecrement = (menuId: number) => {
+    for (const rest of cart) {
+      const item = rest.items.find(
+        (i: { id: number; quantity: number; menu: { id: number } }) =>
+          i.menu.id === menuId
+      );
+
+      if (!item) return;
+
+      // 👉 kalau tinggal 1 → hapus item
+      if (item.quantity === 1) {
+        remove(item.id);
+        return;
+      }
+
+      // 👉 kalau masih > 1 → update quantity
+      update({
+        id: item.id,
+        quantity: item.quantity - 1,
+      });
+      return;
+    }
+  };
+
   //#endregion
 
   return (
@@ -185,36 +231,57 @@ export default function Detail() {
 
       {/* picture menu */}
       <div className='flex flex-wrap justify-center gap-x-16 gap-y-16 md:justify-start md:gap-x-20 md:gap-y-24 lg:justify-start'>
-        {filteredMenus.map((menu) => (
-          <div
-            key={menu.id} // pastikan id ada di tipe Menu
-            className='w-285 space-y-16 space-x-16 md:space-y-24 md:space-x-20'
-          >
-            <div className='flex w-full justify-center'>
-              <img
-                src={menu.image || '/images/14_image5.png'}
-                alt={menu.foodName}
-                className='h-172.5 w-172.5 object-cover md:h-285 md:w-285'
-              />
-            </div>
-            <div className='flex flex-col justify-between space-y-16 p-16 md:flex-row'>
-              <p className='flex flex-col'>
-                <span className='md:text-md text-sm'>{menu.foodName}</span>
-                <span className='text-md font-bold md:text-lg'>
-                  Rp{menu.price}
-                </span>
-              </p>
+        {filteredMenus.map((menu) => {
+          const count = getCount(menu.id);
+          return (
+            <div
+              key={menu.id}
+              className='w-285 space-y-16 space-x-16 md:space-y-24 md:space-x-20'
+            >
+              <div className='flex w-full justify-center'>
+                <img
+                  src={menu.image || '/images/14_image5.png'}
+                  alt={menu.foodName}
+                  className='h-172.5 w-172.5 object-cover md:h-285 md:w-285'
+                />
+              </div>
+              <div className='flex flex-col justify-between space-y-16 p-16 md:flex-row'>
+                <p className='flex flex-col'>
+                  <span className='md:text-md text-sm'>{menu.foodName}</span>
+                  <span className='text-md font-bold md:text-lg'>
+                    Rp{menu.price}
+                  </span>
+                </p>
 
-              {/* Add Button */}
-              <div
-                onClick={() => handleAdd(menu.id)}
-                className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white md:h-40 md:w-79'
-              >
-                Add
+                {/* Add Button / Counter */}
+                {count === 0 ? (
+                  <div
+                    onClick={() => handleAdd(menu.id)}
+                    className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white md:h-40 md:w-79'
+                  >
+                    Add
+                  </div>
+                ) : (
+                  <div className='flex h-36 w-full items-center justify-between rounded-full border md:h-40 md:w-79'>
+                    <button
+                      onClick={() => handleDecrement(menu.id)}
+                      className='w-1/3'
+                    >
+                      -
+                    </button>
+                    <span className='w-1/3 text-center'>{count}</span>
+                    <button
+                      onClick={() => handleIncrement(menu.id)}
+                      className='w-1/3'
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 4. Review */}

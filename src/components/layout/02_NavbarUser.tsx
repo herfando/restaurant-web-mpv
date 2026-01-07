@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DropDown from '../ui/dropDown';
-import { useCartStore } from '@/zustand/cartStore';
-import type { CartItem } from '@/zustand/cartStore';
+import { useCart } from '@/query/hooks/useCart'; // pakai hook baru
 
-export default function NavbarGuest() {
+export default function NavbarUser() {
   //#region scroll state
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
@@ -43,10 +42,20 @@ export default function NavbarGuest() {
   }, []);
   //#endregion
 
-  //#region cart state
-  const cart = useCartStore((state) => state.cart);
+  //#region cart state pakai hook baru
+  const { cart } = useCart(); // ambil data cart
   const totalItems = cart.reduce(
-    (acc: number, item: CartItem) => acc + item.quantity,
+    (
+      acc: number,
+      rest: {
+        items: { quantity: number }[];
+      }
+    ) =>
+      acc +
+      rest.items.reduce(
+        (sum: number, i: { quantity: number }) => sum + i.quantity,
+        0
+      ),
     0
   );
   //#endregion
