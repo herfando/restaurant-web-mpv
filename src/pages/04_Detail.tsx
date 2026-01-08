@@ -291,7 +291,7 @@ export default function Detail() {
                 {count === 0 ? (
                   <div
                     onClick={() => handleAdd(menu.id)}
-                    className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white md:h-40 md:w-79'
+                    className='md:text-md flex h-36 w-full items-center justify-center rounded-full bg-[#C12116] p-12 text-sm font-bold text-white hover:cursor-pointer md:h-40 md:w-79'
                   >
                     Add
                   </div>
@@ -378,7 +378,7 @@ export default function Detail() {
 
             <button
               onClick={() => navigate('/checkout')}
-              className='md:text-md h-40 w-160 rounded-full bg-[#C12116] px-24 text-sm font-bold text-white md:h-44 md:w-230'
+              className='md:text-md h-40 w-160 rounded-full bg-[#C12116] px-24 text-sm font-bold text-white hover:cursor-pointer md:h-44 md:w-230'
             >
               Checkout
             </button>
