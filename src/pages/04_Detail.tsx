@@ -262,17 +262,17 @@ export default function Detail() {
                     Add
                   </div>
                 ) : (
-                  <div className='flex h-36 w-full items-center justify-between rounded-full border md:h-40 md:w-79'>
+                  <div className='flex h-36 w-114 items-center justify-between md:h-40 md:w-123'>
                     <button
                       onClick={() => handleDecrement(menu.id)}
-                      className='w-1/3'
+                      className='h-36 w-36 rounded-full border border-neutral-300 text-2xl hover:cursor-pointer md:h-40 md:w-40'
                     >
                       -
                     </button>
                     <span className='w-1/3 text-center'>{count}</span>
                     <button
                       onClick={() => handleIncrement(menu.id)}
-                      className='w-1/3'
+                      className='h-36 w-36 rounded-full bg-[#C12116] text-2xl text-white hover:cursor-pointer md:h-40 md:w-40'
                     >
                       +
                     </button>
