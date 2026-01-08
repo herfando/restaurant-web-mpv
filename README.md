@@ -25,7 +25,7 @@ React + TypeScript Component-based, type-safe frontend
 Vite Super-fast dev bundler
 Tailwind CSS Utility-first styling for rapid development
 shadcn/ui Elegant, accessible UI components
-Redux Toolkit Client-side state: filters, cart, UI states
+Zustand Client-side state: filters, cart, UI states
 TanStack Query Server-state caching & async handling
 Day.js Lightweight date/time formatting
 🚀 Highlights
