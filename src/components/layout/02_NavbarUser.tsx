@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DropDown from '../ui/dropDown';
-import { useCart } from '@/query/hooks/useCart'; // pakai hook baru
+import { useCart } from '@/query/hooks/useCart';
 
 export default function NavbarUser() {
   //#region scroll state
