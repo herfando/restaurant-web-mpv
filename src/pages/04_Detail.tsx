@@ -124,6 +124,40 @@ export default function Detail() {
 
   //#endregion
 
+  //#region region bottom cart bar
+  const totalItem = cart.reduce(
+    (
+      acc: number,
+      rest: {
+        items: {
+          quantity: number;
+        }[];
+      }
+    ) => acc + rest.items.reduce((sum: number, item) => sum + item.quantity, 0),
+    0
+  );
+
+  const totalPrice = cart.reduce(
+    (
+      acc: number,
+      rest: {
+        items: {
+          quantity: number;
+          menu: {
+            price: number;
+          };
+        }[];
+      }
+    ) =>
+      acc +
+      rest.items.reduce(
+        (sum: number, item) => sum + item.quantity * item.menu.price,
+        0
+      ),
+    0
+  );
+  //#endregion
+
   return (
     <section className='custom-container'>
       {/* 1. HeroImage */}
@@ -262,17 +296,17 @@ export default function Detail() {
                     Add
                   </div>
                 ) : (
-                  <div className='flex h-36 w-full items-center justify-between rounded-full border md:h-40 md:w-79'>
+                  <div className='flex h-36 w-114 items-center justify-between md:h-40 md:w-123'>
                     <button
                       onClick={() => handleDecrement(menu.id)}
-                      className='w-1/3'
+                      className='h-36 w-36 rounded-full border border-neutral-300 text-2xl hover:cursor-pointer md:h-40 md:w-40'
                     >
                       -
                     </button>
                     <span className='w-1/3 text-center'>{count}</span>
                     <button
                       onClick={() => handleIncrement(menu.id)}
-                      className='w-1/3'
+                      className='h-36 w-36 rounded-full bg-[#C12116] text-2xl text-white hover:cursor-pointer md:h-40 md:w-40'
                     >
                       +
                     </button>
@@ -323,6 +357,34 @@ export default function Detail() {
           ))}
         </div>
       </div>
+
+      {/* 5. Render Bottom Cart Bar */}
+      {totalItem > 0 && (
+        <div className='fixed right-0 bottom-0 left-0 z-50 border-t border-[#D5D7DA] bg-white'>
+          <div className='custom-container flex items-center justify-between py-16'>
+            <div>
+              <div className='flex items-center gap-x-3'>
+                <img
+                  className='h-20 w-20 md:h-24 md:w-24'
+                  src='/icons/14_cartblack.png'
+                  alt='cart'
+                />
+                <p className='md:text-md text-sm'>{totalItem} item</p>
+              </div>
+              <p className='text-md mt-2 font-extrabold md:text-xl'>
+                Rp{totalPrice}
+              </p>
+            </div>
+
+            <button
+              onClick={() => navigate('/checkout')}
+              className='md:text-md h-40 w-160 rounded-full bg-[#C12116] px-24 text-sm font-bold text-white md:h-44 md:w-230'
+            >
+              Checkout
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
