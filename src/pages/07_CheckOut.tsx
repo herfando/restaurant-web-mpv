@@ -36,50 +36,59 @@ export default function CheckOut() {
     0
   );
 
-  const handleBuy = async () => {
-    try {
-      // Kalau sudah ada endpoint checkout di Swagger, panggil di sini
-      // await checkoutApi({ cart });
-      alert('Checkout sukses!');
-      navigate('/success');
-    } catch (err) {
-      console.error(err);
-      alert('Checkout gagal, coba lagi.');
-    }
+  const handleBuy = () => {
+    navigate('/success', {
+      state: {
+        date: new Date().toISOString(),
+        paymentMethod: payments.find((p) => p.id === selected)?.name,
+        totalItems,
+        price: totalPrice,
+        deliveryFee: 10000,
+        serviceFee: 1000,
+        total: totalPrice + 11000,
+      },
+    });
   };
 
   return (
-    <section className='mx-auto mb-48 max-w-1032 px-32 md:mb-100'>
+    <section className='mx-auto mt-16 mb-48 max-w-1032 px-32 md:mt-48 md:mb-100'>
       <p className='md:text-lg-lh text-xs-lh mb-16 font-extrabold md:mb-24'>
         Checkout
       </p>
 
-      <div className='flex gap-x-20'>
-        {/* left */}
-        <div>
-          <div className='flex items-center gap-x-8'>
-            <img
-              className='h-24 w-24 md:h-32 md:w-32'
-              src='/icons/09_spot.png'
-              alt='spot delivery adress'
-            />
-            <span className='text-md font-extrabold md:text-lg'>
-              Delivery Address
-            </span>
+      <div className='flex flex-col gap-y-20 md:flex-row md:gap-x-20'>
+        {/* LEFT */}
+        <div className='order-1 space-y-20 md:order-0'>
+          {/* DELIVERY */}
+          <div className='rounded-2xl bg-white p-16 shadow-2xl'>
+            <div className='flex items-center gap-x-8'>
+              <img
+                className='h-24 w-24 md:h-32 md:w-32'
+                src='/icons/09_spot.png'
+                alt='spot delivery adress'
+              />
+              <span className='text-md font-extrabold md:text-lg'>
+                Delivery Address
+              </span>
+            </div>
+
+            <div className='mt-4 space-y-4'>
+              <p>Jl. Sudirman No. 25, Jakarta Pusat, 10220</p>
+              <p>0812-3456-7890</p>
+            </div>
+
+            <button className='mt-16 h-40 w-120 rounded-full border border-neutral-300 font-bold'>
+              Change
+            </button>
           </div>
 
-          <div className='mt-4 space-y-4'>
-            <p>Jl. Sudirman No. 25, Jakarta Pusat, 10220</p>
-            <p>0812-3456-7890</p>
-          </div>
-
-          <button className='mt-16 mb-20 h-40 w-120 rounded-full border border-neutral-300 font-bold md:mt-21'>
-            Change
-          </button>
-
-          <div className='w-361 space-y-12 p-16 md:w-590 md:space-y-20'>
+          {/* RESTAURANT LIST */}
+          <div className='space-y-20'>
             {cart.map((restaurant: CartRestaurant) => (
-              <div key={restaurant.restaurant.id}>
+              <div
+                key={restaurant.restaurant.id}
+                className='rounded-2xl bg-white p-16 shadow-2xl'
+              >
                 <div className='flex items-center justify-between'>
                   <div className='flex gap-x-8'>
                     <img
@@ -93,132 +102,145 @@ export default function CheckOut() {
                       {restaurant.restaurant.name}
                     </p>
                   </div>
-                  <button className='md:text-md h-40 w-120 rounded-full border border-neutral-300 text-sm font-bold hover:cursor-pointer'>
-                    Add item
-                  </button>
                 </div>
 
-                {restaurant.items.map((item: CartItem) => (
-                  <div
-                    key={item.id}
-                    className='flex items-center justify-between gap-y-20'
-                  >
-                    <div className='flex items-center space-y-20 gap-x-17'>
-                      <img
-                        className='h-64 w-64 object-cover md:h-80 md:w-80'
-                        src={item.menu.image || '/images/17_image8.png'}
-                        alt={item.menu.foodName}
-                      />
-                      <div>
-                        <p className='md:text-md text-sm'>
-                          {item.menu.foodName}
-                        </p>
-                        <p className='text-md font-extrabold md:text-lg'>
-                          Rp{item.menu.price}
-                        </p>
+                <div className='mt-16 space-y-20'>
+                  {restaurant.items.map((item: CartItem) => (
+                    <div
+                      key={item.id}
+                      className='flex items-center justify-between'
+                    >
+                      <div className='flex items-center gap-x-17'>
+                        <img
+                          className='h-64 w-64 object-cover md:h-80 md:w-80'
+                          src={item.menu.image || '/images/17_image8.png'}
+                          alt={item.menu.foodName}
+                        />
+                        <div>
+                          <p className='md:text-md text-sm'>
+                            {item.menu.foodName}
+                          </p>
+                          <p className='text-md font-extrabold md:text-lg'>
+                            Rp{item.menu.price}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className='flex items-center gap-x-16'>
-                      <Minus
-                        onClick={() =>
-                          item.quantity === 1
-                            ? remove(item.id)
-                            : update({
-                                id: item.id,
-                                quantity: item.quantity - 1,
-                              })
-                        }
-                        className='hover:cursor-pointer'
-                      />
-                      <div>{item.quantity}</div>
-                      <div
-                        onClick={() =>
-                          update({ id: item.id, quantity: item.quantity + 1 })
-                        }
-                        className='flex h-40 w-40 items-center justify-center rounded-full bg-[#C12116]'
-                      >
-                        <Plus className='text-white hover:cursor-pointer' />
+                      <div className='flex items-center gap-x-16'>
+                        <Minus
+                          onClick={() =>
+                            item.quantity === 1
+                              ? remove(item.id)
+                              : update({
+                                  id: item.id,
+                                  quantity: item.quantity - 1,
+                                })
+                          }
+                        />
+                        <div>{item.quantity}</div>
+                        <div
+                          onClick={() =>
+                            update({
+                              id: item.id,
+                              quantity: item.quantity + 1,
+                            })
+                          }
+                          className='flex h-40 w-40 items-center justify-center rounded-full bg-[#C12116]'
+                        >
+                          <Plus className='text-white' />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* right */}
-        <div>
-          <div className='w-390'>
-            <p className='tet-md font-extrabold md:text-lg'>Payment Method</p>
-            {payments.map((payment, index) => (
-              <div key={payment.id}>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-x-5'>
-                    <div className='flex h-40 w-40 items-center justify-center rounded-sm border border-neutral-300'>
-                      <img
-                        className='w-[29.63px]'
-                        src={payment.img}
-                        alt={payment.name}
-                      />
+        {/* RIGHT */}
+        <div className='order-2 md:order-0'>
+          <div className='w-full rounded-2xl bg-white shadow-2xl md:w-390'>
+            {/* PAYMENT */}
+            <div className='p-16'>
+              <p className='tet-md font-extrabold md:text-lg'>Payment Method</p>
+
+              {payments.map((payment, index) => (
+                <div key={payment.id}>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-x-5'>
+                      <div className='flex h-40 w-40 items-center justify-center rounded-sm border border-neutral-300'>
+                        <img
+                          className='w-[29.63px]'
+                          src={payment.img}
+                          alt={payment.name}
+                        />
+                      </div>
+                      <p className='md:text-md text-sm'>{payment.name}</p>
                     </div>
-                    <p className='md:text-md text-sm'>{payment.name}</p>
+
+                    <label>
+                      <input
+                        type='radio'
+                        name='payment'
+                        value={payment.id}
+                        checked={selected === payment.id}
+                        onChange={(e) => setSelected(e.target.value)}
+                        className='peer hidden'
+                      />
+                      <div className='flex h-24 w-24 items-center justify-center rounded-full border border-neutral-200 peer-checked:bg-[#C12116]'>
+                        <img src='/icons/10_Check.png' alt='check' />
+                      </div>
+                    </label>
                   </div>
 
-                  <label>
-                    <input
-                      type='radio'
-                      name='payment'
-                      value={payment.id}
-                      checked={selected === payment.id}
-                      onChange={(e) => setSelected(e.target.value)}
-                      className='peer hidden'
-                    />
-                    <div className='flex h-24 w-24 items-center justify-center rounded-full border border-neutral-400 peer-checked:bg-[#C12116] hover:cursor-pointer'>
-                      <img src='/icons/10_Check.png' alt='check' />
-                    </div>
-                  </label>
+                  {index !== payments.length - 1 && (
+                    <div className='my-16 w-full border-t border-[#D5D7DA]' />
+                  )}
                 </div>
+              ))}
+            </div>
 
-                {index !== payments.length - 1 && (
-                  <div className='my-16 w-full border border-[#D5D7DA]'></div>
-                )}
+            {/* DASHED DIVIDER */}
+            <div className='flex items-center'>
+              <div className='h-20 w-20 -translate-x-1/2 rounded-full bg-neutral-200'></div>
+              <div className='h-[1px] w-full bg-[repeating-linear-gradient(to_right,#D5D7DA_0,#D5D7DA_6px,#fff_6px,#fff_12px)]' />
+              <div className='h-20 w-20 translate-x-1/2 rounded-full bg-neutral-200'></div>
+            </div>
+
+            {/* SUMMARY */}
+            <div className='p-16'>
+              <p className='text-md mb-12 font-extrabold md:text-lg'>
+                Payment Summary
+              </p>
+
+              <div className='space-y-12'>
+                <p className='flex justify-between'>
+                  <span>Price ({totalItems} items)</span>
+                  <span className='font-bold'>Rp{totalPrice}</span>
+                </p>
+                <p className='flex justify-between'>
+                  <span>Delivery Fee</span>
+                  <span className='font-bold'>Rp10.000</span>
+                </p>
+                <p className='flex justify-between'>
+                  <span>Service Fee</span>
+                  <span className='font-bold'>Rp1.000</span>
+                </p>
+                <p className='flex justify-between'>
+                  <span>Total</span>
+                  <span className='font-extrabold'>Rp{totalPrice + 11000}</span>
+                </p>
               </div>
-            ))}
-          </div>
 
-          <div className='my-16 h-[1px] w-full bg-[repeating-linear-gradient(to_right,#D5D7DA_0,#D5D7DA_6px,transparent_6px,transparent_10px)]' />
-          <div className='space-y-12 md:space-y-16'>
-            <p className='text-md mb-12 font-extrabold md:mb-16 md:text-lg'>
-              Payment Summary
-            </p>
-            <p className='md:text-md flex justify-between text-sm'>
-              <span>Price ({totalItems} items)</span>
-              <span className='font-bold'>Rp{totalPrice}</span>
-            </p>
-            <p className='md:text-md flex justify-between text-sm'>
-              <span>Delivery Fee</span>
-              <span className='font-bold'>Rp10.000</span>
-            </p>
-            <p className='md:text-md flex justify-between text-sm'>
-              <span>Service Fee</span>
-              <span className='font-bold'>Rp1.000</span>
-            </p>
-            <p className='md:text-md flex justify-between text-sm'>
-              <span>Total</span>
-              <span className='font-extrabold'>
-                Rp{totalPrice + 10000 + 1000}
-              </span>
-            </p>
+              <button
+                onClick={handleBuy}
+                className='mt-16 h-48 w-full rounded-full bg-[#C12116] font-bold text-[#FDFDFD]'
+              >
+                Buy
+              </button>
+            </div>
           </div>
-
-          <button
-            onClick={handleBuy}
-            className='text-md md-w350 mt-12 h-44 w-full rounded-full bg-[#C12116] font-bold text-[#FDFDFD] hover:cursor-pointer md:mt-16 md:h-48'
-          >
-            Buy
-          </button>
         </div>
       </div>
     </section>

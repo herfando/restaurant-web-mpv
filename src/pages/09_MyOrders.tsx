@@ -1,8 +1,18 @@
 import { Search } from 'lucide-react';
+import { useCart } from '@/query/hooks/useCart';
+import type { CartRestaurant, CartItem } from '@/query/types/cartType';
+import { useState } from 'react';
+import Review from './10_Review';
 
 export default function MyOrders() {
+  const { cart } = useCart();
+  const [showReview, setShowReview] = useState(false);
+
+  const totalPrice = (items: CartItem[]) =>
+    items.reduce((sum, item) => sum + item.quantity * item.menu.price, 0);
+
   return (
-    <section className='custom-container'>
+    <section className='custom-container relative'>
       <div className='flex gap-x-32'>
         {/* left */}
         <div className='hidden h-274 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
@@ -14,30 +24,32 @@ export default function MyOrders() {
             />
             <span className='bold text-md md:text-lg'>John Doe</span>
           </div>
-          {/* Delivery Address */}
+
           <div className='md:text-md space-y-28 text-sm'>
             <div className='flex gap-x-8'>
               <img src='/icons/11_iconaddress.svg' alt='address' />
               <p>Delivery Address</p>
             </div>
-            {/* My Orders */}
+
             <div className='flex gap-x-8'>
               <img src='/icons/12_iconorders.svg' alt='orders' />
               <p>My Orders</p>
             </div>
-            {/* Logout */}
+
             <div className='flex gap-x-8'>
               <img src='/icons/13_iconlogout.svg' alt='logout' />
               <p>Logout</p>
             </div>
           </div>
         </div>
+
         {/* right */}
         <div className='w-full'>
           <h2 className='md:text-lg-lh text-xs-lh mb-16 font-extrabold md:mb-24'>
             My Orders
           </h2>
-          <div className='h-724 w-full p-16 md:h-734 md:p-24'>
+
+          <div className='w-full p-16 md:p-24'>
             {/* Search */}
             <label className='relative'>
               <Search
@@ -51,7 +63,8 @@ export default function MyOrders() {
                 type='text'
               />
             </label>
-            {/* button */}
+
+            {/* STATUS BUTTONS */}
             <div className='md:text-md mt-20 flex max-w-680 gap-x-8 text-sm font-semibold md:gap-x-12'>
               <button className='h-40 rounded-full border border-neutral-300 px-16 md:h-46'>
                 Status
@@ -72,46 +85,83 @@ export default function MyOrders() {
                 Canceled
               </button>
             </div>
-            {/* Burger king */}
-            <div className='mt-20 p-18 md:p-20'>
-              <div className='flex items-center justify-between'>
-                <div className='flex gap-x-8'>
-                  <img src='/images/16_image7.png' alt='shop' />
-                  <p className='text-md flex items-center gap-x-8 font-bold md:text-lg'>
-                    Burger King
-                  </p>
-                </div>
-              </div>
-              <div className='mt-14 flex items-center gap-x-17 md:mt-16'>
-                <img
-                  className='h-80 w-80'
-                  src='/images/17_image8.png'
-                  alt='burger'
-                />
-                <div>
-                  <p className='md:text-md text-sm'>Food Name</p>
-                  <p className='text-md font-extrabold md:text-lg'>
-                    2 x Rp50.000
-                  </p>
-                </div>
-              </div>
-              {/* line */}
-              <div className='my-12 w-full border border-[#D5D7DA] md:my-16'></div>
 
-              {/* Total */}
-              <div className='flex flex-wrap justify-between gap-y-12'>
-                <div className='text-sm'>
-                  <p>Total</p>
-                  <p className='text-md font-extrabold md:text-xl'>Rp100.000</p>
+            {/* CART ITEMS */}
+            {cart.map((restaurant: CartRestaurant) => (
+              <div
+                key={restaurant.restaurant.id}
+                className='mt-20 p-18 md:p-20'
+              >
+                <div className='flex items-center justify-between'>
+                  <div className='flex gap-x-8'>
+                    {/* Logo restoran selalu tampil */}
+                    <img
+                      src={
+                        restaurant.restaurant.logo || '/images/16_image7.png'
+                      }
+                      alt={restaurant.restaurant.name}
+                      className='h-32 w-32 object-cover'
+                    />
+                    <p className='text-md flex items-center gap-x-8 font-bold md:text-lg'>
+                      {restaurant.restaurant.name}
+                    </p>
+                  </div>
                 </div>
-                <button className='h-44 w-full rounded-full bg-[#C12116] text-white hover:cursor-pointer md:h-48 md:w-240'>
-                  Give Review
-                </button>
+
+                {restaurant.items.map((item: CartItem) => (
+                  <div
+                    key={item.id}
+                    className='mt-14 flex items-center gap-x-17 md:mt-16'
+                  >
+                    <img
+                      className='h-64 w-64 object-cover md:h-80 md:w-80'
+                      src={item.menu.image || '/images/17_image8.png'}
+                      alt={item.menu.foodName}
+                    />
+                    <div>
+                      <p className='md:text-md text-sm'>{item.menu.foodName}</p>
+                      <p className='text-md font-extrabold md:text-lg'>
+                        {item.quantity} x Rp{item.menu.price}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+
+                <div className='my-12 w-full border border-[#D5D7DA] md:my-16'></div>
+
+                <div className='flex flex-wrap justify-between gap-y-12'>
+                  <div className='text-sm'>
+                    <p>Total</p>
+                    <p className='text-md font-extrabold md:text-xl'>
+                      Rp{totalPrice(restaurant.items)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowReview(true)}
+                    className='h-44 w-full rounded-full bg-[#C12116] text-white hover:cursor-pointer md:h-48 md:w-240'
+                  >
+                    Give Review
+                  </button>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* POPUP REVIEW */}
+      {showReview && (
+        <>
+          {/* overlay semi-transparent */}
+          <div
+            onClick={() => setShowReview(false)}
+            className='fixed inset-0 z-40 bg-[#0A0D1280]'
+          />
+          <div className='fixed inset-0 z-50 flex items-center justify-center'>
+            <Review />
+          </div>
+        </>
+      )}
     </section>
   );
 }
