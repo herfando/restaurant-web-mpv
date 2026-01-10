@@ -3,10 +3,12 @@ import { useCart } from '@/query/hooks/useCart';
 import type { CartRestaurant, CartItem } from '@/query/types/cartType';
 import { useState } from 'react';
 import Review from './10_Review';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyOrders() {
   const { cart } = useCart();
   const [showReview, setShowReview] = useState(false);
+  const navigate = useNavigate();
 
   const totalPrice = (items: CartItem[]) =>
     items.reduce((sum, item) => sum + item.quantity * item.menu.price, 0);
@@ -26,19 +28,28 @@ export default function MyOrders() {
           </div>
 
           <div className='md:text-md space-y-28 text-sm'>
-            <div className='flex gap-x-8'>
+            <div
+              className='flex gap-x-8 hover:cursor-pointer'
+              onClick={() => navigate('/deliveryAddress')}
+            >
               <img src='/icons/11_iconaddress.svg' alt='address' />
-              <p>Delivery Address</p>
+              <p className='hover:text-red-500'>Delivery Address</p>
             </div>
 
-            <div className='flex gap-x-8'>
+            <div
+              className='flex gap-x-8 hover:cursor-pointer'
+              onClick={() => navigate('/my-orders')}
+            >
               <img src='/icons/12_iconorders.svg' alt='orders' />
-              <p>My Orders</p>
+              <p className='hover:text-red-500'>My Orders</p>
             </div>
 
-            <div className='flex gap-x-8'>
+            <div
+              className='flex gap-x-8 hover:cursor-pointer'
+              onClick={() => navigate('/login')}
+            >
               <img src='/icons/13_iconlogout.svg' alt='logout' />
-              <p>Logout</p>
+              <p className='hover:text-red-500'>Logout</p>
             </div>
           </div>
         </div>

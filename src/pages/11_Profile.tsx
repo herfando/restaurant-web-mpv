@@ -1,4 +1,8 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function Profile() {
+  const navigate = useNavigate();
+
   return (
     <section className='mt-16 mb-48 flex gap-x-32 md:mt-48 md:mb-197 md:translate-x-160'>
       {/* left */}
@@ -13,19 +17,28 @@ export default function Profile() {
         </div>
         {/* Delivery Address */}
         <div className='md:text-md space-y-28 text-sm'>
-          <div className='flex gap-x-8'>
+          <div
+            className='flex gap-x-8 hover:cursor-pointer'
+            onClick={() => navigate('/deliveryAddress')}
+          >
             <img src='/icons/11_iconaddress.svg' alt='address' />
-            <p>Delivery Address</p>
+            <p className='hover:text-red-500'>Delivery Address</p>
           </div>
           {/* My Orders */}
-          <div className='flex gap-x-8'>
+          <div
+            className='flex gap-x-8 hover:cursor-pointer'
+            onClick={() => navigate('/my-orders')}
+          >
             <img src='/icons/12_iconorders.svg' alt='orders' />
-            <p>My Orders</p>
+            <p className='hover:text-red-500'>My Orders</p>
           </div>
           {/* Logout */}
-          <div className='flex gap-x-8'>
+          <div
+            className='flex gap-x-8 hover:cursor-pointer'
+            onClick={() => navigate('/login')}
+          >
             <img src='/icons/13_iconlogout.svg' alt='logout' />
-            <p>Logout</p>
+            <p className='hover:text-red-500'>Logout</p>
           </div>
         </div>
       </div>

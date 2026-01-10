@@ -37,7 +37,7 @@ export default function DropDown({ isOpen, onClose, user }: DropDownProps) {
           <img src='/icons/11_iconaddress.svg' alt='address icon' />
           <p
             onClick={() => {
-              navigate('/borrowed');
+              navigate('/deliveryAddress');
               onClose();
             }}
             className='text-sm font-semibold hover:cursor-pointer hover:text-[#EE1D52]'
@@ -50,7 +50,7 @@ export default function DropDown({ isOpen, onClose, user }: DropDownProps) {
           <img src='/icons/12_iconorders.svg' alt='address icon' />
           <p
             onClick={() => {
-              navigate('/reviews');
+              navigate('/my-orders');
               onClose();
             }}
             className='text-sm font-semibold hover:cursor-pointer hover:text-[#EE1D52]'

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import DropDown from '../ui/dropDown';
-import { useCart } from '@/query/hooks/useCart'; // hook cart baru
+import { useCart } from '@/query/hooks/useCart';
 
 export default function NavbarUser2() {
   //#region cart state (FULL DARI BACKEND)
