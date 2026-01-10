@@ -9,13 +9,11 @@ import {
 export const useCart = () => {
   const queryClient = useQueryClient();
 
-  // QUERY CART
   const cartQuery = useQuery({
     queryKey: ['cart'],
     queryFn: getCart,
   });
 
-  // ADD
   const addMutation = useMutation({
     mutationFn: addToCart,
     onSuccess: () => {
@@ -23,7 +21,6 @@ export const useCart = () => {
     },
   });
 
-  // UPDATE
   const updateMutation = useMutation({
     mutationFn: updateCartItem,
     onSuccess: () => {
@@ -31,7 +28,6 @@ export const useCart = () => {
     },
   });
 
-  // REMOVE
   const removeMutation = useMutation({
     mutationFn: removeCartItem,
     onSuccess: () => {
@@ -39,13 +35,23 @@ export const useCart = () => {
     },
   });
 
+  const clearCart = () => {
+    queryClient.setQueryData(['cart'], {
+      data: {
+        cart: [],
+        summary: null,
+      },
+    });
+  };
+
   return {
-    cart: cartQuery.data?.data.cart || [],
+    cart: cartQuery.data?.data.cart ?? [],
     summary: cartQuery.data?.data.summary,
     isLoading: cartQuery.isLoading,
 
     add: addMutation.mutate,
     update: updateMutation.mutate,
     remove: removeMutation.mutate,
+    clearCart,
   };
 };

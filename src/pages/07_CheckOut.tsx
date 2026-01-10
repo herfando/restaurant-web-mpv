@@ -3,11 +3,15 @@ import { useCart } from '@/query/hooks/useCart';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CartRestaurant, CartItem } from '@/query/types/cartType';
+import { useOrder } from '@/query/hooks/useOrder';
 
 export default function CheckOut() {
   const navigate = useNavigate();
-  const { cart, update, remove } = useCart();
-  const [selected, setSelected] = useState('');
+  const { cart, update, remove, clearCart } = useCart();
+  const { mutate: checkout, isPending } = useOrder();
+
+  // ✅ DEFAULT PAYMENT → BUY LANGSUNG JALAN
+  const [selected, setSelected] = useState<string>('BNI');
 
   const payments = [
     { id: 'BNI', name: 'Bank Negara Indonesia', img: '/images/18_BNI.png' },
@@ -37,17 +41,29 @@ export default function CheckOut() {
   );
 
   const handleBuy = () => {
-    navigate('/success', {
-      state: {
-        date: new Date().toISOString(),
-        paymentMethod: payments.find((p) => p.id === selected)?.name,
-        totalItems,
-        price: totalPrice,
-        deliveryFee: 10000,
-        serviceFee: 1000,
-        total: totalPrice + 11000,
+    if (!selected) return;
+
+    checkout(
+      {
+        restaurants: cart.map((restaurant: CartRestaurant) => ({
+          restaurantId: restaurant.restaurant.id,
+          items: restaurant.items.map((item: CartItem) => ({
+            menuId: item.menu.id,
+            quantity: item.quantity,
+          })),
+        })),
+        deliveryAddress: 'Jl. Sudirman No. 25, Jakarta Pusat, 10220',
+        phone: '0812-3456-7890',
+        paymentMethod: payments.find((p) => p.id === selected)?.name ?? '',
+        notes: '',
       },
-    });
+      {
+        onSuccess: () => {
+          clearCart();
+          navigate('/success'); // Langsung pindah ke halaman success
+        },
+      }
+    );
   };
 
   return (
@@ -201,7 +217,7 @@ export default function CheckOut() {
               ))}
             </div>
 
-            {/* DASHED DIVIDER */}
+            {/* DASHED DIVIDER — TIDAK DIUBAH */}
             <div className='flex items-center'>
               <div className='h-20 w-20 -translate-x-1/2 rounded-full bg-neutral-200'></div>
               <div className='h-[1px] w-full bg-[repeating-linear-gradient(to_right,#D5D7DA_0,#D5D7DA_6px,#fff_6px,#fff_12px)]' />
@@ -234,10 +250,12 @@ export default function CheckOut() {
               </div>
 
               <button
+                type='button'
                 onClick={handleBuy}
+                disabled={isPending}
                 className='mt-16 h-48 w-full rounded-full bg-[#C12116] font-bold text-[#FDFDFD]'
               >
-                Buy
+                {isPending ? 'Processing...' : 'Buy'}
               </button>
             </div>
           </div>
