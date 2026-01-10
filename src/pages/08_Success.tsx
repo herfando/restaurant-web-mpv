@@ -16,7 +16,6 @@ export default function Success() {
     total: number;
   } | null;
 
-  // ⛔ JIKA MASUK LANGSUNG / REFRESH / STATE HILANG
   useEffect(() => {
     if (!state) {
       navigate('/checkout', { replace: true });
@@ -91,7 +90,7 @@ export default function Success() {
 
           <button
             onClick={() => navigate('/my-orders')}
-            className='h-44 w-329 rounded-full bg-[#C12116] text-[#FDFDFD] md:h-48 md:w-388'
+            className='h-44 w-329 rounded-full bg-[#C12116] text-[#FDFDFD] hover:cursor-pointer md:h-48 md:w-388'
           >
             See My Orders
           </button>
