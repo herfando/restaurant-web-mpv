@@ -3,14 +3,11 @@ import { useCart } from '@/query/hooks/useCart';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CartRestaurant, CartItem } from '@/query/types/cartType';
-import { useOrder } from '@/query/hooks/useOrder';
+import { checkoutApi } from '@/query/services/orderService';
 
 export default function CheckOut() {
   const navigate = useNavigate();
   const { cart, update, remove, clearCart } = useCart();
-  const { mutate: checkout, isPending } = useOrder();
-
-  // ✅ DEFAULT PAYMENT → BUY LANGSUNG JALAN
   const [selected, setSelected] = useState<string>('BNI');
 
   const payments = [
@@ -40,11 +37,11 @@ export default function CheckOut() {
     0
   );
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
     if (!selected) return;
 
-    checkout(
-      {
+    try {
+      await checkoutApi({
         restaurants: cart.map((restaurant: CartRestaurant) => ({
           restaurantId: restaurant.restaurant.id,
           items: restaurant.items.map((item: CartItem) => ({
@@ -56,14 +53,29 @@ export default function CheckOut() {
         phone: '0812-3456-7890',
         paymentMethod: payments.find((p) => p.id === selected)?.name ?? '',
         notes: '',
-      },
-      {
-        onSuccess: () => {
-          clearCart();
-          navigate('/success'); // Langsung pindah ke halaman success
+      });
+
+      clearCart();
+
+      // ✅ Alert tetap muncul
+      window.alert('Order berhasil!');
+
+      // ✅ Navigate ke /success dengan state
+      navigate('/success', {
+        state: {
+          date: new Date().toISOString(),
+          paymentMethod: payments.find((p) => p.id === selected)?.name ?? '',
+          totalItems,
+          price: totalPrice,
+          deliveryFee: 10000,
+          serviceFee: 1000,
+          total: totalPrice + 11000,
         },
-      }
-    );
+      });
+    } catch (err) {
+      console.error(err);
+      window.alert('Checkout gagal, coba lagi!');
+    }
   };
 
   return (
@@ -156,10 +168,7 @@ export default function CheckOut() {
                         <div>{item.quantity}</div>
                         <div
                           onClick={() =>
-                            update({
-                              id: item.id,
-                              quantity: item.quantity + 1,
-                            })
+                            update({ id: item.id, quantity: item.quantity + 1 })
                           }
                           className='flex h-40 w-40 items-center justify-center rounded-full bg-[#C12116]'
                         >
@@ -250,12 +259,11 @@ export default function CheckOut() {
               </div>
 
               <button
-                type='button'
+                disabled={false}
                 onClick={handleBuy}
-                disabled={isPending}
                 className='mt-16 h-48 w-full rounded-full bg-[#C12116] font-bold text-[#FDFDFD]'
               >
-                {isPending ? 'Processing...' : 'Buy'}
+                Buy
               </button>
             </div>
           </div>

@@ -1,4 +1,3 @@
-// REQUEST
 export interface CheckoutItem {
   menuId: number;
   quantity: number;
@@ -20,4 +19,30 @@ export interface CheckoutRequest {
 export interface CheckoutResponse {
   success: boolean;
   message: string;
+}
+
+export interface OrderItem {
+  id: number;
+  foodName: string;
+  price: number;
+  quantity: number;
+  image?: string | null;
+}
+
+export interface OrderRestaurant {
+  restaurant: {
+    id: number;
+    name: string;
+    logo?: string | null;
+  };
+  items: OrderItem[];
+  status: string;
+  orderId: string;
+  total: number;
+  date: string;
+}
+
+export interface OrderResponse {
+  success: boolean;
+  orders: OrderRestaurant[];
 }
