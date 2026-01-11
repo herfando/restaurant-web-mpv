@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DropDown from '../ui/dropDown';
 import { useCart } from '@/query/hooks/useCart';
+import { useAuthStore } from '@/zustand/authStore';
 
 export default function NavbarUser() {
   //#region scroll state
@@ -20,30 +21,12 @@ export default function NavbarUser() {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   //#endregion
 
-  //#region user state
-  const [user, setUser] = useState<{ name: string; image?: string } | null>(
-    null
-  );
-
-  useEffect(() => {
-    const storedRegisterUser = localStorage.getItem('registerUser');
-    if (storedRegisterUser)
-      setUser(JSON.parse(storedRegisterUser)?.user || null);
-  }, []);
-
-  useEffect(() => {
-    const handleUserUpdate = () => {
-      const storedRegisterUser = localStorage.getItem('registerUser');
-      if (storedRegisterUser)
-        setUser(JSON.parse(storedRegisterUser)?.user || null);
-    };
-    window.addEventListener('userUpdated', handleUserUpdate);
-    return () => window.removeEventListener('userUpdated', handleUserUpdate);
-  }, []);
+  //#region USER DARI ZUSTAND (INI KUNCI)
+  const { user } = useAuthStore();
   //#endregion
 
-  //#region cart state pakai hook baru
-  const { cart } = useCart(); // ambil data cart
+  //#region cart state
+  const { cart } = useCart();
   const totalItems = cart.reduce(
     (
       acc: number,
@@ -68,7 +51,10 @@ export default function NavbarUser() {
     >
       <div className='custom-container flex h-80 items-center justify-between'>
         {/* left */}
-        <div className='flex items-center gap-15 hover:cursor-pointer'>
+        <div
+          onClick={() => navigate('/home')}
+          className='flex items-center gap-15 hover:cursor-pointer'
+        >
           <img
             className='h-40 w-40 text-white md:h-42 md:w-42'
             src={
@@ -79,7 +65,7 @@ export default function NavbarUser() {
           <h3
             className={`text-lg-lh hidden font-extrabold md:flex ${
               scrolled ? 'text-black' : 'text-white'
-            } `}
+            }`}
           >
             Foody
           </h3>
@@ -87,6 +73,7 @@ export default function NavbarUser() {
 
         {/* Bag & profile */}
         <div className='flex items-center'>
+          {/* Cart */}
           <div
             className='relative hover:cursor-pointer'
             onClick={() => navigate('/cart')}
@@ -98,7 +85,6 @@ export default function NavbarUser() {
               alt='cart bag'
               className='mr-24 h-28 w-28 md:mr-16 md:h-32 md:w-32'
             />
-            {/* ===== TOTAL ITEMS BADGE ===== */}
             {totalItems > 0 && (
               <span className='absolute -top-2 right-18 flex h-20 w-20 items-center justify-center rounded-full bg-[#C12116] text-xs font-bold text-white'>
                 {totalItems}
@@ -106,25 +92,29 @@ export default function NavbarUser() {
             )}
           </div>
 
-          {/* PROFILE + NAME = TRIGGER DROPDOWN */}
+          {/* PROFILE + NAME */}
           <div
             onClick={toggleDropdown}
             className='mr-16 flex items-center gap-12 hover:cursor-pointer'
           >
-            {/* Profile picture */}
             <div className='flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-gray-200 md:h-48 md:w-48'>
-              {!user?.image && (
+              {!user?.avatar && (
                 <span className='text-3xl text-gray-400'>👤</span>
               )}
-              {user?.image && <img src={user.image} alt='profile' />}
+              {user?.avatar && (
+                <img
+                  src={user.avatar}
+                  alt='profile'
+                  className='h-full w-full object-cover'
+                />
+              )}
             </div>
 
-            {/* Name */}
             {user && (
               <p
                 className={`hidden text-[18px] font-semibold md:flex ${
                   scrolled ? 'text-black' : 'text-white'
-                } `}
+                }`}
               >
                 {user.name}
               </p>
