@@ -1,13 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import DropDown from '../ui/dropDown';
 import { useCart } from '@/query/hooks/useCart';
+import { useAuthStore } from '@/zustand/authStore';
 
 export default function NavbarUser2() {
   //#region cart state (FULL DARI BACKEND)
   const { summary, isLoading } = useCart();
-
-  // COUNTER RESMI DARI BACKEND
   const totalItems = summary?.totalItems ?? 0;
   //#endregion
 
@@ -16,27 +15,9 @@ export default function NavbarUser2() {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   //#endregion
 
-  //#region user state
-  const [user, setUser] = useState<{ name: string; image?: string } | null>(
-    null
-  );
+  //#region user state (GLOBAL – ZUSTAND)
+  const { user } = useAuthStore();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedRegisterUser = localStorage.getItem('registerUser');
-    if (storedRegisterUser)
-      setUser(JSON.parse(storedRegisterUser)?.user || null);
-  }, []);
-
-  useEffect(() => {
-    const handleUserUpdate = () => {
-      const storedRegisterUser = localStorage.getItem('registerUser');
-      if (storedRegisterUser)
-        setUser(JSON.parse(storedRegisterUser)?.user || null);
-    };
-    window.addEventListener('userUpdated', handleUserUpdate);
-    return () => window.removeEventListener('userUpdated', handleUserUpdate);
-  }, []);
   //#endregion
 
   return (
@@ -74,15 +55,24 @@ export default function NavbarUser2() {
           )}
         </div>
 
-        {/* PROFILE + NAME = TRIGGER DROPDOWN */}
+        {/* PROFILE + NAME */}
         <div
           onClick={toggleDropdown}
           className='mr-16 flex items-center gap-12 hover:cursor-pointer'
         >
           <div className='flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-gray-200'>
-            {!user?.image && <span className='text-3xl text-gray-400'>👤</span>}
-            {user?.image && <img src={user.image} alt='profile' />}
+            {!user?.avatar && (
+              <span className='text-3xl text-gray-400'>👤</span>
+            )}
+            {user?.avatar && (
+              <img
+                src={user.avatar}
+                alt='profile'
+                className='h-full w-full object-cover'
+              />
+            )}
           </div>
+
           {user && (
             <p className='hidden text-[18px] font-semibold md:flex'>
               {user.name}

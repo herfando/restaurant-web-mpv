@@ -1,17 +1,56 @@
 import { Search } from 'lucide-react';
 import { useCart } from '@/query/hooks/useCart';
 import type { CartRestaurant, CartItem } from '@/query/types/cartType';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Review from './10_Review';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/zustand/authStore';
+
+type OrderStatus =
+  | 'ALL'
+  | 'PREPARING'
+  | 'ON_THE_WAY'
+  | 'DELIVERED'
+  | 'DONE'
+  | 'CANCELED';
+
+type CartWithStatus = CartRestaurant & {
+  status: OrderStatus;
+};
 
 export default function MyOrders() {
-  const { cart } = useCart();
+  const { cart }: { cart: CartRestaurant[] } = useCart();
+  const { user } = useAuthStore(); // ✅ ZUSTAND
   const [showReview, setShowReview] = useState(false);
+  const [activeStatus, setActiveStatus] = useState<OrderStatus>('ALL');
   const navigate = useNavigate();
 
   const totalPrice = (items: CartItem[]) =>
     items.reduce((sum, item) => sum + item.quantity * item.menu.price, 0);
+
+  const cartWithStatus: CartWithStatus[] = useMemo(
+    () =>
+      cart.map((restaurant) => ({
+        ...restaurant,
+        status: 'PREPARING',
+      })),
+    [cart]
+  );
+
+  const filteredCart = useMemo(() => {
+    if (activeStatus === 'ALL') return cartWithStatus;
+    return cartWithStatus.filter(
+      (restaurant) => restaurant.status === activeStatus
+    );
+  }, [activeStatus, cartWithStatus]);
+
+  const statusButtonClass = (status: OrderStatus) =>
+    `h-40 rounded-full border px-16 md:h-46 whitespace-nowrap
+     ${
+       activeStatus === status
+         ? 'border-[#C12116] text-[#C12116]'
+         : 'border-neutral-300'
+     }`;
 
   return (
     <section className='custom-container relative'>
@@ -19,12 +58,26 @@ export default function MyOrders() {
         {/* left */}
         <div className='hidden h-274 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
           <div className='mb-48 flex items-center gap-x-8'>
-            <img
-              className='h-48 w-48'
-              src='/images/15_image6.png'
-              alt='profile'
-            />
-            <span className='bold text-md md:text-lg'>John Doe</span>
+            <div className='h-48 w-48 overflow-hidden rounded-full bg-gray-200'>
+              {!user?.avatar && (
+                <img
+                  className='h-full w-full object-cover'
+                  src='/images/15_image6.png'
+                  alt='profile'
+                />
+              )}
+              {user?.avatar && (
+                <img
+                  className='h-full w-full object-cover'
+                  src={user.avatar}
+                  alt='profile'
+                />
+              )}
+            </div>
+
+            <span className='bold text-md md:text-lg'>
+              {user?.name || 'Guest'}
+            </span>
           </div>
 
           <div className='md:text-md space-y-28 text-sm'>
@@ -77,35 +130,39 @@ export default function MyOrders() {
 
             {/* STATUS BUTTONS */}
             <div className='md:text-md mt-20 flex max-w-680 gap-x-8 text-sm font-semibold md:gap-x-12'>
-              <button className='h-40 rounded-full border border-neutral-300 px-16 md:h-46'>
-                Status
-              </button>
-              <button className='h-40 rounded-full border border-neutral-300 px-16 md:h-46'>
-                Preparing
-              </button>
-              <button className='h-40 rounded-full border border-neutral-300 px-16 whitespace-nowrap md:h-46'>
-                On the Way
-              </button>
-              <button className='h-40 rounded-full border border-neutral-300 px-16 md:h-46'>
-                Delivered
-              </button>
-              <button className='h-40 rounded-full border border-neutral-300 px-16 md:h-46'>
-                Done
-              </button>
-              <button className='h-40 rounded-full border border-neutral-300 px-16 md:h-46'>
-                Canceled
-              </button>
+              {(
+                [
+                  'ALL',
+                  'PREPARING',
+                  'ON_THE_WAY',
+                  'DELIVERED',
+                  'DONE',
+                  'CANCELED',
+                ] as OrderStatus[]
+              ).map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setActiveStatus(status)}
+                  className={statusButtonClass(status)}
+                >
+                  {status.replaceAll('_', ' ')}
+                </button>
+              ))}
             </div>
 
-            {/* CART ITEMS */}
-            {cart.map((restaurant: CartRestaurant) => (
+            {filteredCart.length === 0 && (
+              <div className='mt-48 text-center text-sm text-neutral-500'>
+                No orders in this status yet
+              </div>
+            )}
+
+            {filteredCart.map((restaurant) => (
               <div
                 key={restaurant.restaurant.id}
                 className='mt-20 p-18 md:p-20'
               >
                 <div className='flex items-center justify-between'>
                   <div className='flex gap-x-8'>
-                    {/* Logo restoran selalu tampil */}
                     <img
                       src={
                         restaurant.restaurant.logo || '/images/16_image7.png'
@@ -113,13 +170,17 @@ export default function MyOrders() {
                       alt={restaurant.restaurant.name}
                       className='h-32 w-32 object-cover'
                     />
-                    <p className='text-md flex items-center gap-x-8 font-bold md:text-lg'>
+                    <p className='text-md font-bold md:text-lg'>
                       {restaurant.restaurant.name}
                     </p>
                   </div>
+
+                  <span className='text-sm font-semibold text-neutral-500'>
+                    {restaurant.status.replaceAll('_', ' ')}
+                  </span>
                 </div>
 
-                {restaurant.items.map((item: CartItem) => (
+                {restaurant.items.map((item) => (
                   <div
                     key={item.id}
                     className='mt-14 flex items-center gap-x-17 md:mt-16'
@@ -147,6 +208,7 @@ export default function MyOrders() {
                       Rp{totalPrice(restaurant.items)}
                     </p>
                   </div>
+
                   <button
                     onClick={() => setShowReview(true)}
                     className='h-44 w-full rounded-full bg-[#C12116] text-white hover:cursor-pointer md:h-48 md:w-240'
@@ -160,10 +222,8 @@ export default function MyOrders() {
         </div>
       </div>
 
-      {/* POPUP REVIEW */}
       {showReview && (
         <>
-          {/* overlay semi-transparent */}
           <div
             onClick={() => setShowReview(false)}
             className='fixed inset-0 z-40 bg-[#0A0D1280]'

@@ -1,7 +1,79 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useProfile, useUpdateProfile } from '@/query/hooks/useAuth';
+import { useAuthStore } from '@/zustand/authStore';
+import type { UpdateProfileRequest } from '@/query/types/authType';
 
 export default function Profile() {
   const navigate = useNavigate();
+  const fileRef = useRef<HTMLInputElement | null>(null);
+
+  const { user, setUser } = useAuthStore();
+  const { mutate: getProfile } = useProfile();
+  const { mutate: updateProfile, isPending } = useUpdateProfile();
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [localAvatar, setLocalAvatar] = useState<string | undefined>(undefined);
+
+  const [form, setForm] = useState<UpdateProfileRequest>({
+    name: '',
+    email: '',
+    phone: '',
+    avatar: '',
+  });
+
+  // fetch profile
+  useEffect(() => {
+    getProfile();
+  }, [getProfile]);
+
+  // sync user -> form (JANGAN override avatar hasil edit)
+  useEffect(() => {
+    if (!user) return;
+
+    setForm((prev) => ({
+      name: user.name || '',
+      email: user.email || '',
+      phone: user.phone || '',
+      avatar: prev.avatar || user.avatar || '',
+    }));
+
+    if (!localAvatar && user.avatar) {
+      setLocalAvatar(user.avatar);
+    }
+  }, [user, localAvatar]);
+
+  const handleChange = (key: keyof UpdateProfileRequest, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // image -> base64
+  const handleAvatarChange = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const avatar = reader.result as string;
+      setLocalAvatar(avatar);
+      setForm((prev) => ({ ...prev, avatar }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSave = () => {
+    updateProfile(form, {
+      onSuccess: () => {
+        if (user) {
+          setUser({
+            ...user,
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            avatar: localAvatar || user.avatar,
+          });
+        }
+        setIsEdit(false);
+      },
+    });
+  };
 
   return (
     <section className='mt-16 mb-48 flex gap-x-32 md:mt-48 md:mb-197 md:translate-x-160'>
@@ -10,12 +82,12 @@ export default function Profile() {
         <div className='mb-48 flex items-center gap-x-8'>
           <img
             className='h-48 w-48'
-            src='/images/15_image6.png'
+            src={localAvatar || '/images/15_image6.png'}
             alt='profile'
           />
-          <span className='bold text-md md:text-lg'>John Doe</span>
+          <span className='bold text-md md:text-lg'>{form.name || '-'}</span>
         </div>
-        {/* Delivery Address */}
+
         <div className='md:text-md space-y-28 text-sm'>
           <div
             className='flex gap-x-8 hover:cursor-pointer'
@@ -24,7 +96,7 @@ export default function Profile() {
             <img src='/icons/11_iconaddress.svg' alt='address' />
             <p className='hover:text-red-500'>Delivery Address</p>
           </div>
-          {/* My Orders */}
+
           <div
             className='flex gap-x-8 hover:cursor-pointer'
             onClick={() => navigate('/my-orders')}
@@ -32,7 +104,7 @@ export default function Profile() {
             <img src='/icons/12_iconorders.svg' alt='orders' />
             <p className='hover:text-red-500'>My Orders</p>
           </div>
-          {/* Logout */}
+
           <div
             className='flex gap-x-8 hover:cursor-pointer'
             onClick={() => navigate('/login')}
@@ -42,31 +114,95 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
       {/* right */}
       <div className='w-full px-16 md:mx-auto md:p-0'>
         <h3 className='md:text-lg-lh text-xs-lh font-extrabold'>Profile</h3>
+
         <div className='space-y-12 bg-[#FFFFFF] p-16 shadow-xl md:h-298 md:w-524 md:p-20'>
-          <img src='/images/15_image6.png' alt='profile image' />
+          {/* avatar */}
+          <img
+            src={localAvatar || '/images/15_image6.png'}
+            alt='profile image'
+            className={isEdit ? 'hover:cursor-pointer' : ''}
+            onClick={() => isEdit && fileRef.current?.click()}
+          />
+
+          {isEdit && (
+            <p className='text-xs text-neutral-500'>Tap photo to update</p>
+          )}
+
+          <input
+            ref={fileRef}
+            type='file'
+            accept='image/*'
+            hidden
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleAvatarChange(file);
+            }}
+          />
+
           {/* Name */}
           <div className='md:text-md flex justify-between text-sm'>
             <p>Name</p>
-            <p className='font-bold'>Johndoe</p>
+            {isEdit ? (
+              <input
+                className='border-b text-right font-bold outline-none'
+                value={form.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+              />
+            ) : (
+              <p className='font-bold'>{form.name}</p>
+            )}
           </div>
+
           {/* Email */}
           <div className='md:text-md flex justify-between text-sm'>
             <p>Email</p>
-            <p className='font-bold'>johndoe@email.com</p>
+            {isEdit ? (
+              <input
+                className='border-b text-right font-bold outline-none'
+                value={form.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+              />
+            ) : (
+              <p className='font-bold'>{form.email}</p>
+            )}
           </div>
-          {/* Nomor Handphone */}
+
+          {/* Phone */}
           <div className='md:text-md flex justify-between text-sm'>
             <p>Nomor Handphone</p>
-            <p className='font-bold'>081234567890</p>
+            {isEdit ? (
+              <input
+                className='border-b text-right font-bold outline-none'
+                value={form.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+              />
+            ) : (
+              <p className='font-bold'>{form.phone}</p>
+            )}
           </div>
-          {/* button Update Profile */}
+
+          {/* Button */}
           <div className='mb-16 w-full md:mb-24'>
-            <button className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] hover:cursor-pointer md:mt-24 md:h-48'>
-              Update Profile
-            </button>
+            {isEdit ? (
+              <button
+                onClick={handleSave}
+                disabled={isPending}
+                className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] disabled:opacity-60 md:mt-24 md:h-48'
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsEdit(true)}
+                className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] md:mt-24 md:h-48'
+              >
+                Update Profile
+              </button>
+            )}
           </div>
         </div>
       </div>
