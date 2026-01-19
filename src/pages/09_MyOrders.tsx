@@ -229,7 +229,7 @@ export default function MyOrders() {
             className='fixed inset-0 z-40 bg-[#0A0D1280]'
           />
           <div className='fixed inset-0 z-50 flex items-center justify-center'>
-            <Review />
+            <Review onClose={() => setShowReview(false)} />
           </div>
         </>
       )}
