@@ -129,7 +129,7 @@ export default function MyOrders() {
             </label>
 
             {/* STATUS BUTTONS */}
-            <div className='md:text-md mt-20 flex max-w-680 gap-x-8 text-sm font-semibold md:gap-x-12'>
+            <div className='md:text-md mt-20 flex max-w-680 gap-x-8 text-sm font-semibold hover:cursor-pointer md:gap-x-12'>
               {(
                 [
                   'ALL',
