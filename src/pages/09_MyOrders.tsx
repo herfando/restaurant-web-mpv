@@ -20,10 +20,17 @@ type CartWithStatus = CartRestaurant & {
 
 export default function MyOrders() {
   const { cart }: { cart: CartRestaurant[] } = useCart();
-  const { user } = useAuthStore(); // ✅ ZUSTAND
+  const { user } = useAuthStore();
   const [showReview, setShowReview] = useState(false);
   const [activeStatus, setActiveStatus] = useState<OrderStatus>('ALL');
   const navigate = useNavigate();
+
+  // 🔧 FIX: simpan data order lengkap untuk review
+  const [selectedOrder, setSelectedOrder] = useState<{
+    restaurantId: number;
+    transactionId: string;
+    menuIds: number[];
+  } | null>(null);
 
   const totalPrice = (items: CartItem[]) =>
     items.reduce((sum, item) => sum + item.quantity * item.menu.price, 0);
@@ -210,7 +217,16 @@ export default function MyOrders() {
                   </div>
 
                   <button
-                    onClick={() => setShowReview(true)}
+                    onClick={() => {
+                      // 🔧 FIX: simpan data lengkap untuk review
+                      setSelectedOrder({
+                        restaurantId: restaurant.restaurant.id,
+                        transactionId: 'TEMP_TRANSACTION_ID',
+
+                        menuIds: restaurant.items.map((item) => item.menu.id),
+                      });
+                      setShowReview(true);
+                    }}
                     className='h-44 w-full rounded-full bg-[#C12116] text-white hover:cursor-pointer md:h-48 md:w-240'
                   >
                     Give Review
@@ -222,14 +238,20 @@ export default function MyOrders() {
         </div>
       </div>
 
-      {showReview && (
+      {/* 🔧 FIX: kirim data lengkap ke Review */}
+      {showReview && selectedOrder && (
         <>
           <div
             onClick={() => setShowReview(false)}
             className='fixed inset-0 z-40 bg-[#0A0D1280]'
           />
           <div className='fixed inset-0 z-50 flex items-center justify-center'>
-            <Review onClose={() => setShowReview(false)} />
+            <Review
+              restaurantId={selectedOrder.restaurantId}
+              transactionId={selectedOrder.transactionId}
+              menuIds={selectedOrder.menuIds}
+              onClose={() => setShowReview(false)}
+            />
           </div>
         </>
       )}
