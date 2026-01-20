@@ -26,11 +26,11 @@ export const useRestaurantReviews = (restaurantId: number) => {
 
 // ---------- SUBMIT REVIEW ----------
 export interface NewReview {
+  transactionId: string;
+  restaurantId: number;
   star: number;
   comment: string;
-  transactionId?: string;
-  restaurantId?: number;
-  menus?: any[];
+  menuIds: number[];
 }
 
 export const useSubmitReview = () => {

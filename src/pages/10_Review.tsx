@@ -1,22 +1,28 @@
 import { X, Star } from 'lucide-react';
 import { useState } from 'react';
 import { useSubmitReview } from '@/query/hooks/useReview';
-import type { Review } from '@/query/types/reviewType';
 
 interface ReviewProps {
   onClose?: () => void;
-  restaurantId?: number;
+  transactionId: string;
+  restaurantId: number;
+  menuIds: number[];
 }
 
-export default function Review({ onClose, restaurantId }: ReviewProps) {
+export default function Review({
+  onClose,
+  transactionId,
+  restaurantId,
+  menuIds,
+}: ReviewProps) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
 
-  // pakai hook useMutation utuh
   const submitReview = useSubmitReview();
 
   const handleSend = () => {
+    // validasi rating
     if (rating === 0) {
       alert('Please select a rating!');
       return;
@@ -24,9 +30,11 @@ export default function Review({ onClose, restaurantId }: ReviewProps) {
 
     submitReview.mutate(
       {
+        transactionId,
+        restaurantId,
         star: rating,
         comment,
-        restaurantId: restaurantId || 0,
+        menuIds,
       },
       {
         onSuccess: () => {
@@ -36,7 +44,7 @@ export default function Review({ onClose, restaurantId }: ReviewProps) {
           if (onClose) onClose();
         },
         onError: (err: any) => {
-          alert('Failed to submit review: ' + err.message);
+          alert(err.response?.data?.message || 'Failed to submit review');
         },
       }
     );
@@ -94,7 +102,7 @@ export default function Review({ onClose, restaurantId }: ReviewProps) {
             <div className='mb-16 w-full md:mb-24'>
               <button
                 onClick={handleSend}
-                disabled={submitReview.status === 'pending'} // pakai 'pending' bukan 'loading'
+                disabled={submitReview.status === 'pending'}
                 className='mt-14 h-44 w-full rounded-full bg-[#C12116] text-[#FDFDFD] hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 md:mt-24 md:h-48 md:w-391'
               >
                 {submitReview.status === 'pending' ? 'Sending...' : 'Send'}
