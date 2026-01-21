@@ -83,7 +83,7 @@ export default function Success() {
             <p className='font-bold'>Rp{serviceFee}</p>
           </div>
 
-          <div className='md:text-md flex w-full justify-between px-17 text-sm md:px-20'>
+          <div className='md:text-md flex w-full justify-between px-16 text-sm md:px-20'>
             <p>Total</p>
             <p className='font-extrabold'>Rp{total}</p>
           </div>
