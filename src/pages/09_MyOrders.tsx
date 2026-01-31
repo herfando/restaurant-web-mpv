@@ -1,10 +1,11 @@
 import { Search } from 'lucide-react';
-import { useCart } from '@/query/hooks/useCart';
-import type { CartRestaurant, CartItem } from '@/query/types/cartType';
 import { useState, useMemo } from 'react';
 import Review from './10_Review';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/zustand/authStore';
+import { useOrder } from '@/query/hooks/useOrder';
+
+// ================= TYPES =================
 
 type OrderStatus =
   | 'ALL'
@@ -14,35 +15,70 @@ type OrderStatus =
   | 'DONE'
   | 'CANCELED';
 
-type CartWithStatus = CartRestaurant & {
-  status: OrderStatus;
+type OrderRestaurant = {
+  restaurant: {
+    id: number;
+    name: string;
+    logo?: string;
+  };
+  items: {
+    id: number; // 🔧 GENERATED
+    quantity: number;
+    menu: {
+      id: number;
+      foodName: string;
+      price: number;
+      image?: string;
+    };
+  }[];
 };
 
+type FlattenedOrder = OrderRestaurant & {
+  status: OrderStatus;
+  transactionId: string;
+};
+
+// ================= COMPONENT =================
+
 export default function MyOrders() {
-  const { cart }: { cart: CartRestaurant[] } = useCart();
   const { user } = useAuthStore();
   const [showReview, setShowReview] = useState(false);
   const [activeStatus, setActiveStatus] = useState<OrderStatus>('ALL');
   const navigate = useNavigate();
 
-  // 🔧 FIX: simpan data order lengkap untuk review
+  const { ordersQuery } = useOrder();
+
   const [selectedOrder, setSelectedOrder] = useState<{
     restaurantId: number;
     transactionId: string;
     menuIds: number[];
   } | null>(null);
 
-  const totalPrice = (items: CartItem[]) =>
+  const totalPrice = (items: any[]) =>
     items.reduce((sum, item) => sum + item.quantity * item.menu.price, 0);
 
-  const cartWithStatus: CartWithStatus[] = useMemo(
-    () =>
-      cart.map((restaurant) => ({
-        ...restaurant,
-        status: 'PREPARING',
-      })),
-    [cart]
-  );
+  // ================= FLATTEN BACKEND DATA (ADAPTER) =================
+  const cartWithStatus: FlattenedOrder[] = useMemo(() => {
+    const orders = ordersQuery.data?.data?.orders || [];
+
+    return orders.flatMap((order: any) =>
+      order.restaurants.map((rest: any) => ({
+        restaurant: rest.restaurant,
+        items: rest.items.map((item: any, idx: number) => ({
+          id: Number(`${order.id}${idx}`), // 🔧 FAKE ID UNTUK KEY UI
+          quantity: item.quantity,
+          menu: {
+            id: item.menuId,
+            foodName: item.menuName, // 🔧 ADAPT BACKEND → UI
+            price: item.price,
+            image: item.image,
+          },
+        })),
+        status: (order.status || 'preparing').toUpperCase(),
+        transactionId: order.transactionId,
+      }))
+    );
+  }, [ordersQuery.data]);
 
   const filteredCart = useMemo(() => {
     if (activeStatus === 'ALL') return cartWithStatus;
@@ -58,6 +94,10 @@ export default function MyOrders() {
          ? 'border-[#C12116] text-[#C12116]'
          : 'border-neutral-300'
      }`;
+
+  // ================= UI =================
+
+  console.log('🔵 MY ORDERS RESPONSE:', ordersQuery.data);
 
   return (
     <section className='custom-container relative'>
@@ -121,7 +161,6 @@ export default function MyOrders() {
           </h2>
 
           <div className='w-full p-16 md:p-24'>
-            {/* Search */}
             <label className='relative'>
               <Search
                 width={20}
@@ -135,7 +174,6 @@ export default function MyOrders() {
               />
             </label>
 
-            {/* STATUS BUTTONS */}
             <div className='md:text-md mt-20 flex max-w-680 gap-x-8 text-sm font-semibold hover:cursor-pointer md:gap-x-12'>
               {(
                 [
@@ -165,7 +203,7 @@ export default function MyOrders() {
 
             {filteredCart.map((restaurant) => (
               <div
-                key={restaurant.restaurant.id}
+                key={`${restaurant.transactionId}-${restaurant.restaurant.id}`}
                 className='mt-20 p-18 md:p-20'
               >
                 <div className='flex items-center justify-between'>
@@ -218,11 +256,9 @@ export default function MyOrders() {
 
                   <button
                     onClick={() => {
-                      // 🔧 FIX: simpan data lengkap untuk review
                       setSelectedOrder({
                         restaurantId: restaurant.restaurant.id,
-                        transactionId: 'TEMP_TRANSACTION_ID',
-
+                        transactionId: restaurant.transactionId,
                         menuIds: restaurant.items.map((item) => item.menu.id),
                       });
                       setShowReview(true);
@@ -238,7 +274,6 @@ export default function MyOrders() {
         </div>
       </div>
 
-      {/* 🔧 FIX: kirim data lengkap ke Review */}
       {showReview && selectedOrder && (
         <>
           <div

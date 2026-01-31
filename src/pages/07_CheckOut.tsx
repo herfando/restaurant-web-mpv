@@ -41,7 +41,7 @@ export default function CheckOut() {
     if (!selected) return;
 
     try {
-      await checkoutApi({
+      const res = await checkoutApi({
         restaurants: cart.map((restaurant: CartRestaurant) => ({
           restaurantId: restaurant.restaurant.id,
           items: restaurant.items.map((item: CartItem) => ({
@@ -55,12 +55,12 @@ export default function CheckOut() {
         notes: '',
       });
 
+      console.log('🟢 CHECKOUT RESPONSE:', res);
+
       clearCart();
 
-      // ✅ Alert tetap muncul
       window.alert('Order berhasil!');
 
-      // ✅ Navigate ke /success dengan state
       navigate('/success', {
         state: {
           date: new Date().toISOString(),
@@ -261,7 +261,7 @@ export default function CheckOut() {
               <button
                 disabled={false}
                 onClick={handleBuy}
-                className='mt-16 h-48 w-full rounded-full bg-[#C12116] font-bold text-[#FDFDFD]'
+                className='mt-16 h-48 w-full cursor-pointer rounded-full bg-[#C12116] font-bold text-[#FDFDFD]'
               >
                 Buy
               </button>

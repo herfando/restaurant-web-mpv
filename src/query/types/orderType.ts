@@ -44,5 +44,9 @@ export interface OrderRestaurant {
 
 export interface OrderResponse {
   success: boolean;
-  orders: OrderRestaurant[];
+  data: {
+    orders: any[];
+    pagination: any;
+    filter: any;
+  };
 }
