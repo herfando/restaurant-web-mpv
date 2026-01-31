@@ -79,7 +79,7 @@ export default function SummaryReviews() {
     <section className='custom-container relative'>
       <div className='flex gap-x-32'>
         {/* LEFT SIDEBAR */}
-        <div className='hidden h-274 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
+        <div className='hidden h-320 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
           {/* PROFILE */}
           <div className='mb-48 flex items-center gap-x-8'>
             <div className='h-48 w-48 overflow-hidden rounded-full bg-gray-200'>
