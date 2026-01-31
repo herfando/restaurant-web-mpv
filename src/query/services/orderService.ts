@@ -15,8 +15,9 @@ export const checkoutApi = async (
 
 // Fetch my orders
 export const getMyOrdersApi = async (): Promise<OrderResponse> => {
-  const { data } = await api.get('/api/order/my-orders');
-  return data;
+  const res = await api.get('/api/order/my-order');
+  console.log('🟣 RAW MY ORDERS API:', res.data);
+  return res.data;
 };
 
 // ✅ Ekspor semua agar bisa diimpor tanpa error

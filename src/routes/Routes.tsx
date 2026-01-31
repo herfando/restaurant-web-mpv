@@ -10,6 +10,7 @@ import MyOrders from '@/pages/09_MyOrders';
 import AppLayout from '@/components/layout/00_AppLayout';
 import { Toaster } from 'react-hot-toast';
 import Profile from '@/pages/11_Profile';
+import SummaryReviews from '@/pages/12_SummaryReviews';
 
 export default function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ export default function AppRoutes() {
           <Route path='/checkout' element={<CheckOut />} />
           <Route path='/my-orders' element={<MyOrders />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/summary-reviews' element={<SummaryReviews />} />
         </Route>
 
         {/* ================= SUCCESS (NO LAYOUT) ================= */}

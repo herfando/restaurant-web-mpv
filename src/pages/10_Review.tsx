@@ -1,6 +1,7 @@
 import { X, Star } from 'lucide-react';
 import { useState } from 'react';
 import { useSubmitReview } from '@/query/hooks/useReview';
+import { useNavigate } from 'react-router-dom';
 
 interface ReviewProps {
   onClose?: () => void;
@@ -18,6 +19,8 @@ export default function Review({
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
+
+  const navigate = useNavigate();
 
   const submitReview = useSubmitReview();
 
@@ -42,6 +45,8 @@ export default function Review({
           setRating(0);
           setComment('');
           if (onClose) onClose();
+
+          navigate('/summary-reviews');
         },
         onError: (err: any) => {
           alert(err.response?.data?.message || 'Failed to submit review');
@@ -49,6 +54,14 @@ export default function Review({
       }
     );
   };
+
+  console.log('[DEBUG REVIEW] review props:', {
+    transactionId,
+    restaurantId,
+    star: rating,
+    comment,
+    menuIds,
+  });
 
   return (
     <div className=''>

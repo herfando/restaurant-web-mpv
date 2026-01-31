@@ -24,11 +24,11 @@ export interface Review {
   star: number;
   comment: string;
   createdAt: string;
-  updatedAt?: string;
-  transactionId?: string;
-  restaurant?: Restaurant;
-  user?: User;
-  menus?: Menu[];
+  updatedAt: string;
+  transactionId: string;
+  restaurant: Restaurant;
+  user: User;
+  menus: Menu[];
 }
 
 export interface Pagination {
