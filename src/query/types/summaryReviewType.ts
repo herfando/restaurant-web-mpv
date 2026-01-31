@@ -21,3 +21,12 @@ export interface SummaryReview {
   star: number;
   comment: string;
 }
+
+export interface SubmitReviewPayload {
+  transactionId: string;
+  restaurantId: number;
+  menuIds: number[];
+  star: number;
+  comment: string;
+  reviewId?: number;
+}
