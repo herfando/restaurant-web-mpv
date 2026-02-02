@@ -6,7 +6,12 @@ import {
   getBestSellerRestaurantsApi,
   searchRestaurantsApi,
   getRestaurantDetailApi,
+  getRestaurantsByFilter,
 } from '@/query/services/restaurantService';
+import type {
+  RestaurantFilterParams,
+  GetRestaurantsResponse,
+} from '../types/restaurantType';
 
 // =====================
 // ALL RESTAURANT
@@ -67,5 +72,17 @@ export const useRestaurantDetail = (id: number) => {
     queryKey: ['restaurant', id],
     queryFn: () => getRestaurantDetailApi(id),
     enabled: !!id,
+  });
+};
+
+// =====================
+// USE RESTAURANTS BY FILTER (Category / Rating / Price)
+// =====================
+export const useRestaurantsByFilter = (
+  filters: RestaurantFilterParams = {}
+) => {
+  return useQuery<GetRestaurantsResponse>({
+    queryKey: ['restaurants', 'filter', filters],
+    queryFn: () => getRestaurantsByFilter(filters),
   });
 };

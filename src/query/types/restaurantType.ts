@@ -147,3 +147,19 @@ export type GetRestaurantDetailResponse = {
   success: boolean;
   data: RestaurantDetail;
 };
+
+// for cataegory
+// =====================
+// FILTER PARAMS
+// =====================
+export type RestaurantFilterParams = {
+  category?: string;
+  priceMin?: number;
+  priceMax?: number;
+  rating?: number;
+  location?: string;
+  range?: number;
+  page?: number;
+  limit?: number;
+  distance?: number;
+};

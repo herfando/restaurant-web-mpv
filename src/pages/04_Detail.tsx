@@ -337,6 +337,7 @@ export default function Detail() {
                   <img
                     src={rev.user?.avatar || '/images/15_image6.png'}
                     alt='img profile'
+                    onClick={() => navigate('/profile')}
                   />
                 </div>
                 <div>

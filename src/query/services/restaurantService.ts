@@ -6,6 +6,7 @@ import type {
   GetBestSellerRestaurantsResponse,
   GetSearchRestaurantsResponse,
   GetRestaurantDetailResponse,
+  RestaurantFilterParams,
 } from '@/query/types/restaurantType';
 
 // =====================
@@ -79,5 +80,18 @@ export const getRestaurantDetailApi = async (
   id: number
 ): Promise<GetRestaurantDetailResponse> => {
   const { data } = await api.get(`/api/resto/${id}`);
+  return data;
+};
+
+// =====================
+// GET RESTAURANT BY FILTER
+// GET /api/resto?category=xxx&rating=5...
+// =====================
+export const getRestaurantsByFilter = async (
+  filters: RestaurantFilterParams = {}
+): Promise<GetRestaurantsResponse> => {
+  const { data } = await api.get('/api/resto', {
+    params: filters,
+  });
   return data;
 };

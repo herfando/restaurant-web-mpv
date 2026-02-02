@@ -103,8 +103,11 @@ export default function MyOrders() {
     <section className='custom-container relative'>
       <div className='flex gap-x-32'>
         {/* left */}
-        <div className='hidden h-274 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
-          <div className='mb-48 flex items-center gap-x-8'>
+        <div className='hidden h-320 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
+          <div
+            onClick={() => navigate('/profile')}
+            className='mb-48 flex cursor-pointer items-center gap-x-8'
+          >
             <div className='h-48 w-48 overflow-hidden rounded-full bg-gray-200'>
               {!user?.avatar && (
                 <img
@@ -130,7 +133,7 @@ export default function MyOrders() {
           <div className='md:text-md space-y-28 text-sm'>
             <div
               className='flex gap-x-8 hover:cursor-pointer'
-              onClick={() => navigate('/deliveryAddress')}
+              onClick={() => navigate('/delivery-address')}
             >
               <img src='/icons/11_iconaddress.svg' alt='address' />
               <p className='hover:text-red-500'>Delivery Address</p>
@@ -142,6 +145,14 @@ export default function MyOrders() {
             >
               <img src='/icons/12_iconorders.svg' alt='orders' />
               <p className='hover:text-red-500'>My Orders</p>
+            </div>
+
+            <div
+              className='flex gap-x-8 hover:cursor-pointer'
+              onClick={() => navigate('/summary-reviews')}
+            >
+              <img src='/icons/12_iconorders.svg' alt='reviews' />
+              <p className='hover:text-red-500'>My Reviews</p>
             </div>
 
             <div

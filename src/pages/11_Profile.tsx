@@ -78,12 +78,13 @@ export default function Profile() {
   return (
     <section className='mt-16 mb-48 flex gap-x-32 md:mt-48 md:mb-197 md:translate-x-160'>
       {/* left */}
-      <div className='hidden h-274 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
+      <div className='hidden h-320 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
         <div className='mb-48 flex items-center gap-x-8'>
           <img
             className='h-48 w-48'
             src={localAvatar || '/images/15_image6.png'}
             alt='profile'
+            onClick={() => navigate('/profile')}
           />
           <span className='bold text-md md:text-lg'>{form.name || '-'}</span>
         </div>
@@ -91,7 +92,7 @@ export default function Profile() {
         <div className='md:text-md space-y-28 text-sm'>
           <div
             className='flex gap-x-8 hover:cursor-pointer'
-            onClick={() => navigate('/deliveryAddress')}
+            onClick={() => navigate('/delivery-address')}
           >
             <img src='/icons/11_iconaddress.svg' alt='address' />
             <p className='hover:text-red-500'>Delivery Address</p>
@@ -103,6 +104,14 @@ export default function Profile() {
           >
             <img src='/icons/12_iconorders.svg' alt='orders' />
             <p className='hover:text-red-500'>My Orders</p>
+          </div>
+
+          <div
+            className='flex gap-x-8 hover:cursor-pointer'
+            onClick={() => navigate('/summary-reviews')}
+          >
+            <img src='/icons/12_iconorders.svg' alt='reviews' />
+            <p className='hover:text-red-500'>My Reviews</p>
           </div>
 
           <div
