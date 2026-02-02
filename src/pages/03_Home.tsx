@@ -98,7 +98,8 @@ export default function Home() {
 
         <div
           className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          onClick={() => setActiveCategory('nearby')}
+          // onClick={() => setActiveCategory('nearby')}
+          onClick={() => navigate('/category')}
         >
           <img
             className='h-48 w-48 md:h-65 md:w-65'

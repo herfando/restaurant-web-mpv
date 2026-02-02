@@ -10,6 +10,13 @@ export default function CheckOut() {
   const { cart, update, remove, clearCart } = useCart();
   const [selected, setSelected] = useState<string>('BNI');
 
+  // 🔥 DELIVERY STATE (FORM DULU)
+  const [isEditingAddress, setIsEditingAddress] = useState(true);
+  const [deliveryAddress, setDeliveryAddress] = useState(
+    'Jl. Sudirman No. 25, Jakarta Pusat, 10220'
+  );
+  const [phone, setPhone] = useState('0812-3456-7890');
+
   const payments = [
     { id: 'BNI', name: 'Bank Negara Indonesia', img: '/images/18_BNI.png' },
     { id: 'BRI', name: 'Bank Rakyat Indonesia', img: '/images/19_BRI.png' },
@@ -38,7 +45,10 @@ export default function CheckOut() {
   );
 
   const handleBuy = async () => {
-    if (!selected) return;
+    if (!selected || !deliveryAddress || !phone) {
+      window.alert('Delivery address & phone wajib diisi!');
+      return;
+    }
 
     try {
       const res = await checkoutApi({
@@ -49,8 +59,8 @@ export default function CheckOut() {
             quantity: item.quantity,
           })),
         })),
-        deliveryAddress: 'Jl. Sudirman No. 25, Jakarta Pusat, 10220',
-        phone: '0812-3456-7890',
+        deliveryAddress,
+        phone,
         paymentMethod: payments.find((p) => p.id === selected)?.name ?? '',
         notes: '',
       });
@@ -100,17 +110,51 @@ export default function CheckOut() {
               </span>
             </div>
 
-            <div className='mt-4 space-y-4'>
-              <p>Jl. Sudirman No. 25, Jakarta Pusat, 10220</p>
-              <p>0812-3456-7890</p>
-            </div>
+            {/* ===== FORM MODE (DEFAULT) ===== */}
+            {isEditingAddress && (
+              <div className='mt-12 space-y-8'>
+                <textarea
+                  className='w-full rounded-md border border-neutral-300 p-8'
+                  value={deliveryAddress}
+                  onChange={(e) => setDeliveryAddress(e.target.value)}
+                  placeholder='Delivery Address'
+                />
 
-            <button className='mt-16 h-40 w-120 rounded-full border border-neutral-300 font-bold'>
-              Change
-            </button>
+                <input
+                  className='h-40 w-full rounded-md border border-neutral-300 px-8'
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder='Phone Number'
+                />
+
+                <button
+                  onClick={() => setIsEditingAddress(false)}
+                  className='mt-8 h-40 w-120 rounded-full bg-[#C12116] font-bold text-white'
+                >
+                  Save
+                </button>
+              </div>
+            )}
+
+            {/* ===== DISPLAY MODE (SETELAH SAVE) ===== */}
+            {!isEditingAddress && (
+              <>
+                <div className='mt-4 space-y-4'>
+                  <p>{deliveryAddress}</p>
+                  <p>{phone}</p>
+                </div>
+
+                <button
+                  onClick={() => setIsEditingAddress(true)}
+                  className='mt-16 h-40 w-120 rounded-full border border-neutral-300 font-bold'
+                >
+                  Change
+                </button>
+              </>
+            )}
           </div>
 
-          {/* RESTAURANT LIST */}
+          {/* RESTAURANT LIST — TIDAK DIUBAH */}
           <div className='space-y-20'>
             {cart.map((restaurant: CartRestaurant) => (
               <div
@@ -183,7 +227,7 @@ export default function CheckOut() {
           </div>
         </div>
 
-        {/* RIGHT */}
+        {/* RIGHT — TIDAK ADA YANG DIHAPUS */}
         <div className='order-2 md:order-0'>
           <div className='w-full rounded-2xl bg-white shadow-2xl md:w-390'>
             {/* PAYMENT */}
@@ -226,7 +270,7 @@ export default function CheckOut() {
               ))}
             </div>
 
-            {/* DASHED DIVIDER — TIDAK DIUBAH */}
+            {/* DASHED DIVIDER */}
             <div className='flex items-center'>
               <div className='h-20 w-20 -translate-x-1/2 rounded-full bg-neutral-200'></div>
               <div className='h-[1px] w-full bg-[repeating-linear-gradient(to_right,#D5D7DA_0,#D5D7DA_6px,#fff_6px,#fff_12px)]' />

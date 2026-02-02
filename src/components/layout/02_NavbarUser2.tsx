@@ -7,7 +7,7 @@ import { useAuthStore } from '@/zustand/authStore';
 export default function NavbarUser2() {
   //#region cart state (FULL DARI BACKEND)
   const { summary, isLoading } = useCart();
-  const totalItems = summary?.totalItems ?? 0;
+
   //#endregion
 
   //#region trigger dropdown
@@ -48,9 +48,9 @@ export default function NavbarUser2() {
             className='mr-24 h-28 w-28 hover:cursor-pointer md:h-32 md:w-32'
           />
 
-          {!isLoading && totalItems > 0 && (
+          {!isLoading && summary?.totalItems > 0 && (
             <span className='absolute -top-2 right-18 flex h-20 w-20 items-center justify-center rounded-full bg-[#C12116] text-xs font-bold text-white'>
-              {totalItems}
+              {summary?.totalItems}
             </span>
           )}
         </div>

@@ -11,6 +11,8 @@ import AppLayout from '@/components/layout/00_AppLayout';
 import { Toaster } from 'react-hot-toast';
 import Profile from '@/pages/11_Profile';
 import SummaryReviews from '@/pages/12_SummaryReviews';
+import DeliveryAddress from '@/pages/13_DeliveryAddress';
+import Category from '@/pages/05_Category';
 
 export default function AppRoutes() {
   return (
@@ -32,10 +34,12 @@ export default function AppRoutes() {
         <Route element={<AppLayout variant='detail' />}>
           <Route path='/restaurant/:restaurantId' element={<Detail />} />
           <Route path='/cart' element={<MyCart />} />
+          <Route path='/category' element={<Category />} />
           <Route path='/checkout' element={<CheckOut />} />
           <Route path='/my-orders' element={<MyOrders />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/summary-reviews' element={<SummaryReviews />} />
+          <Route path='/delivery-address' element={<DeliveryAddress />} />
         </Route>
 
         {/* ================= SUCCESS (NO LAYOUT) ================= */}

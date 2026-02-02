@@ -20,7 +20,6 @@ export const getMyOrdersApi = async (): Promise<OrderResponse> => {
   return res.data;
 };
 
-// ✅ Ekspor semua agar bisa diimpor tanpa error
 export default {
   checkoutApi,
   getMyOrdersApi,
