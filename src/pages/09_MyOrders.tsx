@@ -100,7 +100,7 @@ export default function MyOrders() {
   console.log('🔵 MY ORDERS RESPONSE:', ordersQuery.data);
 
   return (
-    <section className='custom-container relative'>
+    <section className='custom-container relative mt-20 md:mt-48'>
       <div className='flex gap-x-32'>
         {/* left */}
         <div className='hidden h-320 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>

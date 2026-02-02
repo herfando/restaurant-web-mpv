@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CartRestaurant, CartItem } from '@/query/types/cartType';
 import { checkoutApi } from '@/query/services/orderService';
+import { api } from '@/query/api'; // 🆕 import untuk delete cart backend
 
 export default function CheckOut() {
   const navigate = useNavigate();
@@ -12,10 +13,8 @@ export default function CheckOut() {
 
   // 🔥 DELIVERY STATE (FORM DULU)
   const [isEditingAddress, setIsEditingAddress] = useState(true);
-  const [deliveryAddress, setDeliveryAddress] = useState(
-    'Jl. Sudirman No. 25, Jakarta Pusat, 10220'
-  );
-  const [phone, setPhone] = useState('0812-3456-7890');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [phone, setPhone] = useState('');
 
   const payments = [
     { id: 'BNI', name: 'Bank Negara Indonesia', img: '/images/18_BNI.png' },
@@ -44,6 +43,16 @@ export default function CheckOut() {
     0
   );
 
+  // 🆕 Fungsi untuk delete cart backend
+  const deleteCartBackend = async () => {
+    try {
+      const res = await api.delete('/api/cart');
+      console.log('🗑️ Cart deleted backend:', res.data);
+    } catch (err) {
+      console.error('❌ Gagal hapus cart backend:', err);
+    }
+  };
+
   const handleBuy = async () => {
     if (!selected || !deliveryAddress || !phone) {
       window.alert('Delivery address & phone wajib diisi!');
@@ -67,6 +76,10 @@ export default function CheckOut() {
 
       console.log('🟢 CHECKOUT RESPONSE:', res);
 
+      // 🆕 Hapus cart di backend
+      await deleteCartBackend();
+
+      // 🆕 Hapus cache/react-query cart supaya UI sinkron
       clearCart();
 
       window.alert('Order berhasil!');

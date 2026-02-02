@@ -111,7 +111,8 @@ export default function Home() {
 
         <div
           className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          onClick={() => setActiveCategory('discount')}
+          // onClick={() => setActiveCategory('discount')}
+          onClick={() => navigate('/category')}
         >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
@@ -123,7 +124,8 @@ export default function Home() {
 
         <div
           className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          onClick={() => setActiveCategory('bestseller')}
+          // onClick={() => setActiveCategory('bestseller')}
+          onClick={() => navigate('/category')}
         >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
@@ -135,7 +137,8 @@ export default function Home() {
 
         <div
           className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          onClick={() => setActiveCategory('delivery')}
+          // onClick={() => setActiveCategory('delivery')}
+          onClick={() => navigate('/category')}
         >
           <img
             className='h-48 w-48 md:h-65 md:w-65'
@@ -147,7 +150,8 @@ export default function Home() {
 
         <div
           className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          onClick={() => setActiveCategory('lunch')}
+          // onClick={() => setActiveCategory('lunch')}
+          onClick={() => navigate('/category')}
         >
           <img
             className='h-48 w-48 md:h-65 md:w-65'

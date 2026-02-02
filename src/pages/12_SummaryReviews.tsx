@@ -76,7 +76,7 @@ export default function SummaryReviews() {
 
   // ================= UI =================
   return (
-    <section className='custom-container relative'>
+    <section className='custom-container relative mt-20 md:mt-48'>
       <div className='flex gap-x-32'>
         {/* LEFT SIDEBAR */}
         <div className='hidden h-320 w-240 rounded-xl bg-[#FFFFFF] p-20 shadow-xl lg:block'>
