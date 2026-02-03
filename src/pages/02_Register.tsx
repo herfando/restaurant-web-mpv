@@ -1,30 +1,41 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Eye, EyeOff } from 'lucide-react';
+
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
-import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useRegister } from '@/query/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 
 export default function Register() {
-  //#region
   const navigate = useNavigate();
-  //#endregion
 
-  //#region hidden-show password
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  //#endregion
-
-  //#region fetch data register
+  // State
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const registerMutation = useRegister();
+
+  // Handlers
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setName(e.target.value);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(e.target.value);
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPhone(e.target.value);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPassword(e.target.value);
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => setConfirmPassword(e.target.value);
+  const togglePassword = () => setShowPassword((prev) => !prev);
+  const toggleConfirmPassword = () => setShowConfirmPassword((prev) => !prev);
+
   const handleRegister = () => {
     if (password !== confirmPassword) {
       toast.error('Password tidak sama');
@@ -32,12 +43,7 @@ export default function Register() {
     }
 
     registerMutation.mutate(
-      {
-        name,
-        email,
-        phone,
-        password,
-      },
+      { name, email, phone, password },
       {
         onSuccess: () => {
           toast.success('Register berhasil 🎉');
@@ -49,34 +55,42 @@ export default function Register() {
       }
     );
   };
-  //#endregion
+
+  // Conditional / computed values
+  const passwordIcon = showPassword ? <Eye /> : <EyeOff />;
+  const confirmPasswordIcon = showConfirmPassword ? <Eye /> : <EyeOff />;
+  const registerButtonText = registerMutation.isPending
+    ? 'Loading...'
+    : 'Register';
 
   return (
     <section className='absolute top-1/2 mx-auto flex h-auto w-full -translate-y-1/2 items-center justify-center'>
       <div className='item mx-auto flex h-auto w-full max-w-1472'>
-        {/* 1. left side */}
+        {/* Left Side */}
         <div className='hidden basis-1/2 md:flex'>
           <img src='/images/01_burger.png' alt='burger' />
         </div>
-        {/* 2. right side */}
+
+        {/* Right Side */}
         <div className='flex w-full flex-col items-center justify-center md:basis-1/2'>
-          {/* Foody */}
           <div className='w-345 space-y-20 md:space-y-16'>
+            {/* Brand */}
             <div className='flex space-y-16 space-x-[11.43px] md:space-y-20 md:space-x-15'>
               <img src='/icons/01_brandfoody.svg' alt='brand food' />
               <h3 className='md:-text-[32px] text-[24.38px] font-extrabold'>
                 Foody
               </h3>
             </div>
-            {/* welcome back */}
+
+            {/* Welcome */}
             <h3 className='md:text-sm-lh text-xs-lh font-extrabold'>
               Welcome Back
             </h3>
-            {/* Good to see you again! Let’s eat */}
             <h4 className='md:text-md text-sm font-medium'>
               Good to see you again! Let’s eat
             </h4>
-            {/* Button sign up & sign in */}
+
+            {/* Sign In / Sign Up */}
             <div className='mx-auto flex h-56 w-full items-center justify-center gap-8 bg-[#F5F5F5] p-8'>
               <Link
                 to='/login'
@@ -88,64 +102,65 @@ export default function Register() {
                 Sign up
               </button>
             </div>
-            {/* Name */}
+
+            {/* Inputs */}
             <Input
-              onChange={(e) => setName(e.target.value)}
               placeholder='Name'
-            ></Input>
-            {/* Email */}
+              value={name}
+              onChange={handleNameChange}
+            />
             <Input
               placeholder='Email'
-              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              onChange={handleEmailChange}
             />
-
-            {/* Number Phone */}
             <Input
               placeholder='Number Phone'
-              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
+              onChange={handlePhoneChange}
             />
 
-            {/* pasword */}
+            {/* Password */}
             <div className='relative'>
               <Input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 placeholder='Password'
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
               />
-
               <button
                 type='button'
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={togglePassword}
                 className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2'
               >
-                {showPassword ? <Eye /> : <EyeOff />}
+                {passwordIcon}
               </button>
             </div>
+
             {/* Confirm Password */}
             <div className='relative'>
               <Input
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 placeholder='Confirm Password'
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={handleConfirmPasswordChange}
               />
-
               <button
                 type='button'
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={toggleConfirmPassword}
                 className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2'
               >
-                {showConfirmPassword ? <Eye /> : <EyeOff />}
+                {confirmPasswordIcon}
               </button>
             </div>
-            {/* Button */}
+
+            {/* Register Button */}
             <Button
               className='cursor-pointer'
               onClick={handleRegister}
               disabled={registerMutation.isPending}
             >
-              {registerMutation.isPending ? 'Loading...' : 'Register'}
+              {registerButtonText}
             </Button>
           </div>
         </div>
