@@ -35,7 +35,7 @@ export default function Category() {
   const restaurants: Restaurant[] = data?.data.restaurants || [];
 
   return (
-    <section className='custom-container mb-40 md:mt-48 md:mb-100'>
+    <section className='custom-container mt-20 mb-40 md:mt-48 md:mb-100'>
       {/* title */}
       <h2 className='md:text-lg-lh font-extrabold md:mb-32'>All Restaurant</h2>
       <div className='flex gap-x-40'>

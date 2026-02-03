@@ -133,7 +133,7 @@ export default function Profile() {
           <img
             src={localAvatar || '/images/15_image6.png'}
             alt='profile image'
-            className={isEdit ? 'hover:cursor-pointer' : ''}
+            className={`h-64 w-64 ${isEdit ? 'hover:cursor-pointer' : ''}`}
             onClick={() => isEdit && fileRef.current?.click()}
           />
 

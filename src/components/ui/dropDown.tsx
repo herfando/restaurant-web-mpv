@@ -48,10 +48,7 @@ export default function DropDown({ isOpen, onClose, user }: DropDownProps) {
         <div className='flex items-center gap-x-8'>
           <img src='/icons/11_iconaddress.svg' alt='address icon' />
           <p
-            onClick={() => {
-              navigate('/deliveryAddress');
-              onClose();
-            }}
+            onClick={() => navigate('/delivery-address')}
             className='text-sm font-semibold hover:cursor-pointer hover:text-[#EE1D52]'
           >
             Delivery Address

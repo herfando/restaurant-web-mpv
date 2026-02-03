@@ -64,7 +64,7 @@ export default function Review({
   });
 
   return (
-    <div className=''>
+    <div>
       <section className='absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-2xl bg-[#FFFFFF]'>
         <div className='h-463 w-361 rounded-2xl p-16 md:h-518 md:w-439 md:px-26 md:py-24'>
           {/* Give Review */}
