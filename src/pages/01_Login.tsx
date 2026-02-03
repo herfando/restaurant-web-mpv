@@ -1,25 +1,28 @@
-import Button from '@/components/ui/button';
-import Input from '@/components/ui/input';
-import { Check, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLogin } from '@/query/hooks/useAuth';
 import toast from 'react-hot-toast';
+import { Check, Eye, EyeOff } from 'lucide-react';
+
+import Button from '@/components/ui/button';
+import Input from '@/components/ui/input';
+import { useLogin } from '@/query/hooks/useAuth';
 
 export default function Login() {
-  //#region
   const navigate = useNavigate();
-  //#endregion
 
-  //#region hidden-show password
-  const [show, setShow] = useState(false);
-  const [passwordInput, setPasswordInput] = useState('');
-  //#endregion
-
-  //#region login
+  // State
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const loginMutation = useLogin();
+
+  // Handlers
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(e.target.value);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPassword(e.target.value);
+  const togglePassword = () => setShowPassword((prev) => !prev);
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -32,10 +35,6 @@ export default function Login() {
       {
         onSuccess: () => {
           toast.success('Login berhasil 🎉');
-
-          // contoh simpan token (kalau ada)
-          // localStorage.setItem('token', res.token);
-
           navigate('/home');
         },
         onError: (error: any) => {
@@ -44,39 +43,43 @@ export default function Login() {
       }
     );
   };
-  //#endregion
+
+  // Conditional / Computed values
+  const eyeIcon = showPassword ? <Eye /> : <EyeOff />;
+  const loginButtonText = loginMutation.isPending ? 'Loading...' : 'Login';
 
   return (
     <section className='absolute top-1/2 mx-auto flex h-auto w-full -translate-y-1/2 items-center justify-center'>
       <div className='item mx-auto flex h-auto w-full max-w-1472'>
-        {/* 1. left side */}
+        {/* Left Side */}
         <div className='hidden basis-1/2 md:flex'>
           <img src='/images/01_burger.png' alt='burger' />
         </div>
-        {/* 2. right side */}
+
+        {/* Right Side */}
         <div className='flex w-full flex-col items-center justify-center md:basis-1/2'>
-          {/* Foody */}
           <div className='w-345 space-y-20 md:space-y-16'>
+            {/* Brand */}
             <div className='flex space-y-16 space-x-[11.43px] md:space-y-20 md:space-x-15'>
-              <img src='/icons/01_brandfoody.svg' alt='brand food' />
+              <img src='/icons/01_brandfoody.svg' alt='brand foody' />
               <h3 className='md:-text-[32px] text-[24.38px] font-extrabold'>
                 Foody
               </h3>
             </div>
-            {/* welcome back */}
+
+            {/* Welcome */}
             <h3 className='md:text-sm-lh text-xs-lh font-extrabold'>
               Welcome Back
             </h3>
-            {/* Good to see you again! Let’s eat */}
             <h4 className='md:text-md text-sm font-medium'>
               Good to see you again! Let’s eat
             </h4>
-            {/* Button sign up & sign in */}
+
+            {/* Sign In / Sign Up */}
             <div className='mx-auto flex h-56 w-full items-center justify-center gap-8 bg-[#F5F5F5] p-8'>
               <button className='h-full w-full basis-1/2 rounded-2xl bg-white font-bold text-[#0A0D12]'>
                 Sign in
               </button>
-
               <Link
                 to='/register'
                 className='h-full w-full basis-1/2 content-center rounded-2xl text-center text-neutral-700'
@@ -84,45 +87,45 @@ export default function Login() {
                 Sign up
               </Link>
             </div>
-            {/* email */}
+
+            {/* Inputs */}
             <Input
               placeholder='Email'
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
             />
-            {/* pasword */}
+
             <div className='relative'>
               <Input
-                type={show ? 'text' : 'password'}
-                value={passwordInput}
+                type={showPassword ? 'text' : 'password'}
+                value={password}
                 placeholder='Password'
-                onChange={(e) => {
-                  setPasswordInput(e.target.value);
-                  setPassword(e.target.value);
-                }}
+                onChange={handlePasswordChange}
               />
               <button
-                onClick={() => setShow(!show)}
+                onClick={togglePassword}
                 className='absolute top-1/2 right-16 h-16 w-16 -translate-y-1/2 cursor-pointer'
               >
-                {show ? <Eye /> : <EyeOff />}
+                {eyeIcon}
               </button>
             </div>
-            {/* Ceklist */}
+
+            {/* Remember Me */}
             <label className='flex items-center gap-4'>
               <input type='checkbox' className='peer hidden' />
               <span className='flex h-20 w-20 cursor-pointer items-center justify-center rounded-sm border border-[#D5D7DA] text-white peer-checked:bg-[#C12116]'>
                 <Check />
               </span>
-              <span className='md:text-md tsssext-sm'>Remember Me</span>
+              <span className='md:text-md text-sm'>Remember Me</span>
             </label>
-            {/* Button */}
+
+            {/* Login Button */}
             <Button
               onClick={handleLogin}
               disabled={loginMutation.isPending}
               className='cursor-pointer'
             >
-              {loginMutation.isPending ? 'Loading...' : 'Login'}
+              {loginButtonText}
             </Button>
           </div>
         </div>

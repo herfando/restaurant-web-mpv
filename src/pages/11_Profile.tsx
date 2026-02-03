@@ -69,6 +69,8 @@ export default function Profile() {
     });
   };
 
+  console.log(profile);
+
   return (
     <section className='mt-16 mb-48 flex gap-x-32 md:mt-48 md:mb-197 md:translate-x-160'>
       {/* left */}
