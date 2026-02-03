@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CartRestaurant, CartItem } from '@/query/types/cartType';
 import { checkoutApi } from '@/query/services/orderService';
-import { api } from '@/query/api'; // 🆕 import untuk delete cart backend
+import { api } from '@/query/axiosInstance'; // 🆕 import untuk delete cart backend
 
 export default function CheckOut() {
   const navigate = useNavigate();

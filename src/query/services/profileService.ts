@@ -1,4 +1,4 @@
-import { api } from '@/query/api';
+import { api } from '@/query/axiosInstance';
 import type {
   UserProfile,
   UpdateProfileRequest,

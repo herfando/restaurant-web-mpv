@@ -1,5 +1,5 @@
 // 📁 addressService.ts
-import { api } from '@/query/api';
+import { api } from '@/query/axiosInstance';
 import type { TransactionAddress } from '@/query/types/addressType';
 
 // Ambil order terakhir untuk address
