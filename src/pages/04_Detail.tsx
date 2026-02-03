@@ -2,7 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { useRestaurantDetail } from '@/query/hooks/useRestaurant';
 import { useState } from 'react';
-
 import { useAuthStore } from '@/zustand/authStore';
 import { useCart } from '@/query/hooks/useCart'; // pakai hooks baru
 
@@ -121,7 +120,6 @@ export default function Detail() {
       return;
     }
   };
-
   //#endregion
 
   //#region region bottom cart bar
