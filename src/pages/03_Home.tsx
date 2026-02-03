@@ -1,6 +1,6 @@
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Star } from 'lucide-react';
-import { useState } from 'react';
-import Category from './05_Category';
 import {
   useRestaurants,
   useNearbyRestaurants,
@@ -9,9 +9,8 @@ import {
 } from '@/query/hooks/useRestaurant';
 import type { Restaurant } from '@/query/types/restaurantType';
 import type { RecommendedRestaurant } from '@/query/types/restaurantType';
-import { useNavigate } from 'react-router-dom';
 
-type Category =
+type CategoryType =
   | 'recommended'
   | 'nearby'
   | 'discount'
@@ -20,39 +19,82 @@ type Category =
   | 'lunch';
 
 export default function Home() {
-  const [activeCategory, setActiveCategory] = useState<Category>('recommended');
+  // State
+  const [activeCategory, setActiveCategory] =
+    useState<CategoryType>('recommended');
   const [searchText, setSearchText] = useState<string>('');
+  const navigate = useNavigate();
 
+  // Queries
   const recommendedQuery = useRecommendedRestaurants();
   const allQuery = useRestaurants();
   const nearbyQuery = useNearbyRestaurants();
   const bestSellerQuery = useBestSellerRestaurants();
 
-  const navigate = useNavigate();
+  // Handlers
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSearchText(e.target.value);
 
-  let filteredRestaurants: (Restaurant | RecommendedRestaurant)[] = [];
+  const handleNavigateRestaurant = (id: string | number) =>
+    navigate(`/restaurant/${id}`, { state: { fromHome: true } });
 
-  if (activeCategory === 'recommended') {
-    filteredRestaurants = (
-      recommendedQuery.data?.data.recommendations || []
-    ).filter((r) => r.name.toLowerCase().includes(searchText.toLowerCase()));
-  } else if (activeCategory === 'nearby') {
-    filteredRestaurants = (nearbyQuery.data?.data.restaurants || []).filter(
-      (r) => r.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-  } else if (activeCategory === 'bestseller') {
-    filteredRestaurants = (bestSellerQuery.data?.data.restaurants || []).filter(
-      (r) => r.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-  } else {
-    filteredRestaurants = (allQuery.data?.data.restaurants || []).filter((r) =>
-      r.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-  }
+  const handleNavigateCategory = (category?: string) => {
+    if (category) setActiveCategory(category as CategoryType);
+    navigate('/category');
+  };
+
+  // Filtered restaurants based on active category and search text
+  const filteredRestaurants: (Restaurant | RecommendedRestaurant)[] =
+    useMemo(() => {
+      const lowerSearch = searchText.toLowerCase();
+      let data: (Restaurant | RecommendedRestaurant)[] = [];
+
+      switch (activeCategory) {
+        case 'recommended':
+          data = recommendedQuery.data?.data.recommendations || [];
+          break;
+        case 'nearby':
+          data = nearbyQuery.data?.data.restaurants || [];
+          break;
+        case 'bestseller':
+          data = bestSellerQuery.data?.data.restaurants || [];
+          break;
+        default:
+          data = allQuery.data?.data.restaurants || [];
+          break;
+      }
+
+      return data.filter((r) => r.name.toLowerCase().includes(lowerSearch));
+    }, [
+      activeCategory,
+      searchText,
+      recommendedQuery.data,
+      nearbyQuery.data,
+      bestSellerQuery.data,
+      allQuery.data,
+    ]);
+
+  // Category list for mapping
+  const categories = [
+    {
+      label: 'All Restaurant',
+      img: '/images/03_restaurant.png',
+      key: 'delivery',
+    },
+    { label: 'Nearby', img: '/images/05_nearby.png', key: 'nearby' },
+    { label: 'Discount', img: '/images/06_discount.png', key: 'discount' },
+    {
+      label: 'Best Seller',
+      img: '/images/07_bestseller.png',
+      key: 'bestseller',
+    },
+    { label: 'Delivery', img: '/images/08_delivery.png', key: 'delivery' },
+    { label: 'Lunch', img: '/images/09_lunch.png', key: 'lunch' },
+  ];
 
   return (
     <section>
-      {/* 1.Hero section */}
+      {/* 1. Hero section */}
       <div>
         <div>
           <img
@@ -60,9 +102,11 @@ export default function Home() {
             src='/images/02_homeburger.png'
             alt='hamburger'
           />
+          {/* Overlay gradient */}
           <div className='absolute inset-0 top-0 left-0 h-[clamp(648px,57vw,827px)] w-full bg-linear-to-b from-black/80'></div>
         </div>
 
+        {/* Hero text and search input */}
         <div className='absolute top-1/2 right-1/2 w-[clamp(349px,57vw,712px)] translate-x-1/2 -translate-y-1/2 text-center text-white'>
           <h2 className='text-[clamp(36px,3vw,48px)] font-extrabold lg:whitespace-nowrap'>
             Explore Culinary Experiences
@@ -74,7 +118,7 @@ export default function Home() {
             <input
               placeholder='Search restaurants, food and drink'
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              onChange={handleSearchChange}
               className='h-[clamp(48px,5vh,56px)] w-full rounded-full bg-white pl-60 text-neutral-700 lg:w-604'
             />
             <Search className='absolute top-0 left-24 h-20 w-20 text-neutral-700' />
@@ -82,87 +126,25 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 2.Category section */}
+      {/* 2. Category section */}
       <div className='custom-container my-24 grid grid-cols-3 justify-between space-y-20 space-x-20 md:my-48 md:grid-cols-6 md:space-x-[46.8px]'>
-        <div
-          className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          onClick={() => setActiveCategory('delivery')}
-        >
-          <img
-            className='h-48 w-48 md:h-65 md:w-65'
-            src='/images/03_restaurant.png'
-            alt='restaurant'
-          />
-          <p className='text-sm font-bold md:text-lg'>All Restaurant</p>
-        </div>
-
-        <div
-          className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          // onClick={() => setActiveCategory('nearby')}
-          onClick={() => navigate('/category')}
-        >
-          <img
-            className='h-48 w-48 md:h-65 md:w-65'
-            src='/images/05_nearby.png'
-            alt='nearby'
-          />
-          <p className='text-sm font-bold md:text-lg'>Nearby</p>
-        </div>
-
-        <div
-          className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          // onClick={() => setActiveCategory('discount')}
-          onClick={() => navigate('/category')}
-        >
-          <img
-            className='h-48 w-48 md:h-65 md:w-65'
-            src='/images/06_discount.png'
-            alt='discount'
-          />
-          <p className='text-sm font-bold md:text-lg'>Discount</p>
-        </div>
-
-        <div
-          className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          // onClick={() => setActiveCategory('bestseller')}
-          onClick={() => navigate('/category')}
-        >
-          <img
-            className='h-48 w-48 md:h-65 md:w-65'
-            src='/images/07_bestseller.png'
-            alt='bestseller'
-          />
-          <p className='text-sm font-bold md:text-lg'>Best Seller</p>
-        </div>
-
-        <div
-          className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          // onClick={() => setActiveCategory('delivery')}
-          onClick={() => navigate('/category')}
-        >
-          <img
-            className='h-48 w-48 md:h-65 md:w-65'
-            src='/images/08_delivery.png'
-            alt='delivery'
-          />
-          <p className='text-sm font-bold md:text-lg'>Delivery</p>
-        </div>
-
-        <div
-          className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
-          // onClick={() => setActiveCategory('lunch')}
-          onClick={() => navigate('/category')}
-        >
-          <img
-            className='h-48 w-48 md:h-65 md:w-65'
-            src='/images/09_lunch.png'
-            alt='lunch'
-          />
-          <p className='text-sm font-bold md:text-lg'>Lunch</p>
-        </div>
+        {categories.map((cat) => (
+          <div
+            key={cat.key}
+            className='flex flex-col items-center justify-center space-y-30 hover:cursor-pointer md:space-y-23.5'
+            onClick={() => handleNavigateCategory(cat.key)}
+          >
+            <img
+              className='h-48 w-48 md:h-65 md:w-65'
+              src={cat.img}
+              alt={cat.label}
+            />
+            <p className='text-sm font-bold md:text-lg'>{cat.label}</p>
+          </div>
+        ))}
       </div>
 
-      {/* 3. Recommended section */}
+      {/* 3. Recommended section header */}
       <div className='custom-container'>
         <div className='mb-16 flex items-center justify-between md:mb-32'>
           <h2 className='md:text-lg-lh text-xs-lh font-extrabold'>
@@ -177,14 +159,12 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 4.Detail recommended section */}
+      {/* 4. Recommended restaurant details */}
       <div className='custom-container mb-48 grid grid-cols-1 justify-center gap-y-16 md:mb-100 md:grid-cols-2 md:gap-y-20 lg:grid-cols-3'>
         {filteredRestaurants.map((item) => (
           <div
-            onClick={() =>
-              navigate(`/restaurant/${item.id}`, { state: { fromHome: true } })
-            }
             key={item.id}
+            onClick={() => handleNavigateRestaurant(item.id)}
             className='flex items-center gap-12 hover:cursor-pointer'
           >
             <img
