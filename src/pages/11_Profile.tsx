@@ -1,16 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { useProfile, useUpdateProfile } from '@/query/hooks/useAuth';
+import { useProfile } from '@/query/hooks/useProfile';
 import { useAuthStore } from '@/zustand/authStore';
-import type { UpdateProfileRequest } from '@/query/types/authType';
+import type { UpdateProfileRequest } from '@/query/types/profileType';
 
 export default function Profile() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const { user, setUser } = useAuthStore();
-  const { mutate: getProfile } = useProfile();
-  const { mutate: updateProfile, isPending } = useUpdateProfile();
+  const { profile, updateProfile, isPending } = useProfile();
 
   const [isEdit, setIsEdit] = useState(false);
   const [localAvatar, setLocalAvatar] = useState<string | undefined>(undefined);
@@ -19,41 +18,36 @@ export default function Profile() {
     name: '',
     email: '',
     phone: '',
-    avatar: '',
+    avatar: undefined,
   });
 
-  // fetch profile
+  // sync profile -> form
   useEffect(() => {
-    getProfile();
-  }, [getProfile]);
-
-  // sync user -> form (JANGAN override avatar hasil edit)
-  useEffect(() => {
-    if (!user) return;
+    if (!profile) return;
 
     setForm((prev) => ({
-      name: user.name || '',
-      email: user.email || '',
-      phone: user.phone || '',
-      avatar: prev.avatar || user.avatar || '',
+      name: profile.name || '',
+      email: profile.email || '',
+      phone: profile.phone || '',
+      avatar: prev.avatar || profile.avatar || '',
     }));
 
-    if (!localAvatar && user.avatar) {
-      setLocalAvatar(user.avatar);
+    if (!localAvatar && profile.avatar) {
+      setLocalAvatar(profile.avatar);
     }
-  }, [user, localAvatar]);
+  }, [profile, localAvatar]);
 
   const handleChange = (key: keyof UpdateProfileRequest, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // image -> base64
+  // convert File -> base64
   const handleAvatarChange = (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      const avatar = reader.result as string;
-      setLocalAvatar(avatar);
-      setForm((prev) => ({ ...prev, avatar }));
+      const base64 = reader.result as string;
+      setLocalAvatar(base64); // preview
+      setForm((prev) => ({ ...prev, avatar: base64 })); // simpan sebagai string
     };
     reader.readAsDataURL(file);
   };
@@ -64,9 +58,9 @@ export default function Profile() {
         if (user) {
           setUser({
             ...user,
-            name: form.name,
-            email: form.email,
-            phone: form.phone,
+            name: form.name || user.name,
+            email: form.email || user.email,
+            phone: form.phone || user.phone,
             avatar: localAvatar || user.avatar,
           });
         }
@@ -97,7 +91,6 @@ export default function Profile() {
             <img src='/icons/11_iconaddress.svg' alt='address' />
             <p className='hover:text-red-500'>Delivery Address</p>
           </div>
-
           <div
             className='flex gap-x-8 hover:cursor-pointer'
             onClick={() => navigate('/my-orders')}
@@ -105,7 +98,6 @@ export default function Profile() {
             <img src='/icons/12_iconorders.svg' alt='orders' />
             <p className='hover:text-red-500'>My Orders</p>
           </div>
-
           <div
             className='flex gap-x-8 hover:cursor-pointer'
             onClick={() => navigate('/summary-reviews')}
@@ -113,7 +105,6 @@ export default function Profile() {
             <img src='/icons/12_iconorders.svg' alt='reviews' />
             <p className='hover:text-red-500'>My Reviews</p>
           </div>
-
           <div
             className='flex gap-x-8 hover:cursor-pointer'
             onClick={() => navigate('/login')}
