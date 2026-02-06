@@ -1,12 +1,12 @@
 # Restaurant Web MVP 🍔
 
 <p align="center">
-  <a href="https://restaurant-web-mpv.vercel.app/">
+  <a href="https://restaurant-web-mpv.vercel.app/home">
     <img src="https://raw.githubusercontent.com/herfando/restaurant-web-mpv/main/public/0.restaurant.gif" alt="Restaurant App Demo" />
   </a>
 </p>
 
-**Hosted URL:** [Restaurant App Live](https://restaurant-web-mpv.vercel.app/)
+**Hosted URL:** [Restaurant App Live](https://restaurant-web-mpv.vercel.app/home)
 
 A sleek, animated, and modern restaurant web experience built with React + TypeScript.
 Designed as an MVP focusing on smooth interactions, fast performance, and a beautiful UI inspired by real-world food apps.
