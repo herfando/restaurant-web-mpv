@@ -2,10 +2,7 @@
 
 <p align="center">
   <a href="https://restaurant-web-mpv.vercel.app/">
-    <img 
-      src="https://raw.githubusercontent.com/herfando/restaurant-web/main/public/0.restaurant.gif" 
-      alt="Restaurant App Demo" 
-    />
+    <img src="https://raw.githubusercontent.com/herfando/REPO-NAME/main/public/0.restaurant.gif" alt="Restaurant App Demo" />
   </a>
 </p>
 
