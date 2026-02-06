@@ -1,7 +1,12 @@
 # Restaurant Web MVP 🍔
 
 <p align="center">
-  <img src="public/0.restaurant.gif" alt="Restaurant App Demo" />
+  <a href="https://restaurant-web-mpv.vercel.app/">
+    <img 
+      src="https://raw.githubusercontent.com/USERNAME/REPO/main/public/0.restaurant.gif" 
+      alt="Restaurant App Demo" 
+    />
+  </a>
 </p>
 
 **Hosted URL:** [Restaurant App Live](https://restaurant-web-mpv.vercel.app/)
